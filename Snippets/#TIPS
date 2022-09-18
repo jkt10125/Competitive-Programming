@@ -1,0 +1,7 @@
+a + b = (a ^ b) + 2 * (a & b)
+
+Disjoint Set Union
+    -> To find connected components of a graph.
+    -> Compress jumps along segments.
+    -> Support Distances upto its representative.
+    
