@@ -1,57 +1,50 @@
 #include <bits/stdc++.h>
 using namespace std;
+int n, ans;
 
-int ans, e, n;
-vector<int> A, B;
-bool cmp(int a, int b) {
-    return ((a & (1 << e)) < (b & (1 << e)));
-}
-
-void solve(int l, int r, int &e) {
-    if(e < 0 || l > r) return;
-    
-
-    int a=0, b=0;
-    for(int i=l; i<=r; i++) {
-        if(A[i] & (1 << e)) a++;
-        if(B[i] & (1 << e)) b++;
-    }
-    if(a + b != r-l+1) solve(l, r, --e);
-    else {
-        sort(A.begin()+l, A.begin()+r+1, cmp);
-        sort(B.begin()+l, B.begin()+r+1, cmp);
-        reverse(B.begin()+l, B.begin()+r+1);
-        e--;
-        solve(l, l+b-1, e);
-        solve(l+b, r, e);
-    } 
+void solve(vector<int> &A, vector<int> &B, int l, int r, int e) {
+	if(e < 0 || l >= r) return;
+	vector<int> cA, cB;
+	for(int i=l; i<=r; i++) {
+		if(A[i] & (1 << e)) cA.push_back(i);
+		if(B[i] & (1 << e)) cB.push_back(i);
+	}
+	int a = cA.size();
+	if(cA.size() + cB.size() != r-l+1) {
+		ans = ans & ~(1 << e);
+		solve(A, B, l, r, e-1);
+	}
+	else {
+		for(int i=l; i<=r; i++) {
+			if(cA.empty()) break;
+			if(!(A[i] & (1 << e))) {
+				swap(A[i], A[cA.back()]);
+				cA.pop_back();
+			}
+		}
+		for(int i=r; i>=l; i--) {
+			if(cB.empty()) break;
+			if(!(B[i] & (1 << e))) {
+				swap(B[i], B[cB.back()]);
+				cB.pop_back();
+			}
+		}
+		solve(A, B, l, l+a-1, e-1);
+		solve(A, B, l+a, r, e-1);
+	}
 }
 
 int main() {
-    int t;
-    cin >> t;
-    while(t--) {
-        cin >> n;
-        A.resize(n);
-        B.resize(n);
-        for(int i=0; i<n; i++) cin >> A[i];
-        for(int i=0; i<n; i++) cin >> B[i];
+	int t;
+	cin >> t;
+	while(t--) {
+		cin >> n;
+		vector<int> A(n), B(n);
+		for(int i=0; i<n; i++) cin >> A[i];
+		for(int i=0; i<n; i++) cin >> B[i];
 
-        e = 29;
-        solve(0, n-1, e);
-
-        ans = (1 << 30) - 1;
-        for(int i=0; i<n; i++) {
-            int a = A[i] ^ B[i];
-            ans = ans & a;
-        }
-
-        for(int i : A) cerr<<i<<" ";
-        cerr<<endl;
-        for(int i : B) cerr << i << " ";
-        cerr<<endl;
-        
-
-        cout<<ans<<endl;
-    }
+		ans = (1 << 30) - 1;
+		solve(A, B, 0, n-1, 29);
+		cout << ans << endl;
+	}
 }
