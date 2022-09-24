@@ -7,11 +7,7 @@ int main() {
     while(t--) {
         string s;
         cin >> s;
-        int a=0, b=0;
-        for(int i=0; i<3; i++) a+=s[i]-'0';
-        for(int i=3; i<6; i++) b+=s[i]-'0';
-        if(a == b) cout<<"YES";
-        else cout<<"NO";
-        cout<<endl;
+        if(s[0] + s[1] + s[2] == s[3] + s[4] + s[5]) cout<<"YES\n";
+        else cout<<"NO\n";
     }
 }
