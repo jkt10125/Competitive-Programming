@@ -98,7 +98,7 @@ class SegTree {
         }
     }
 
-    void update(int idx, int val) {
+    void update(int idx, T val) {
         if(range.first == range.second) {
             data = val;
             return;
