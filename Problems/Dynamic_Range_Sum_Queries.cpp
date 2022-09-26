@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#define int long long
+
 class LazySegTree {
 	int L, R, data, val;
 	LazySegTree *left, *right;
@@ -79,10 +81,23 @@ class LazySegTree {
 	}
 };
 
-int main() {
-	vector<int> A = {2, -4, 3, 6, 10, 6, -4, -8, -3, 5};
-	LazySegTree AA(A, 0, 9);
-	AA.update(0, 9, 5);
-	cerr << AA.query(1);
-	AA.print();
+signed main() {
+    int n, m;
+    cin >> n >> m;
+    vector<int> A(n);
+    for(int i=0; i<n; i++) cin >> A[i];
+    LazySegTree AA(A, 0, n-1);
+
+    while(m--) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        if(a == 1) {
+            b--;
+            AA.update(b, c);
+        }
+        else {
+            b--; c--;
+            cout << AA.query(b, c) << endl;
+        }
+    }
 }
