@@ -1,5 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
+
+// #define int long long
+
 #define FOR(i, a, b, c) for(int i=(int)a; i<=(int)b; i+=(int)c)
 #define F0R(i, n) for(int i=0; i<(int)n; i++)
 #define F1R(i, n) for(int i=1; i<=(int)n; i++)
