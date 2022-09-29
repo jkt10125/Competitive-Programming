@@ -22,6 +22,7 @@ typedef vector<vpii> vvpii;
 
 #define vT vector<T>
 #define vvT vector<vT>
+#define pTT pair<T, T>
 #define all(a) a.begin(), a.end()
 
 #define mp make_pair
@@ -44,13 +45,26 @@ istream& operator>>(istream &is, vT &v) {
 }
 
 template <typename T>
+istream& operator>>(istream &is, pTT &p) {
+	is >> p.ff >> p.ss;
+	return is;
+}
+
+template <typename T>
 ostream& operator<<(ostream &os, const vT &v) {
-	for_all(v) os << it << " ";
+	for_all(v) os << it << ' ';
 	return os;
 }
 
 ostream& operator<<(ostream &os, const bool &b) {
-	(b) ? os << Yes : os << No;
+	// (b) ? os << Yes : os << No;
+	os << ((b) ? Yes : No);
+	return os;
+}
+
+template <typename T>
+ostream& operator<<(ostream &os, const pTT &p) {
+	os << p.ff <<' ' << p.ss;
 	return os;
 }
 
