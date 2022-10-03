@@ -4,17 +4,16 @@ using namespace std;
 int main() {
 	int n;
 	cin >> n;
-	int A[n];
-	for(int i=0; i<n; i++) cin >> A[i];
-	set<int> S;
-	S.insert(A[0]);
-	for(int i=1; i<n; i++) {
-		auto it = S.upper_bound(A[i]);
-		if(it == S.begin()) S.insert(A[i]);
-		else {
-			S.erase(--it);
-			S.insert(A[i]);
-		}
+	int A[n+1] = {0};
+	for(int i=1; i<=n; i++) {
+		int x;
+		cin >> x;
+		A[x] = i;
 	}
-	cout<<S.size();
+
+	int ctr = 1;
+	for(int i=1; i<n; i++) {
+		if(A[i] > A[i+1]) ctr++;
+	}
+	cout<<ctr;
 }

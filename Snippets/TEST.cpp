@@ -1,88 +1,107 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
+
 using namespace std;
 
-class LazySegTree {
-	int L, R, data, val;
-	LazySegTree *left, *right;
-	
-	void push() {
-		if(!val) return;
-		if(left) {
-			left->data += val * (left->R - left->L + 1);
-			right->data += val * (right->R - right->L + 1);
-			left->val += val;
-			right->val += val;
-		}
-		val = 0;
+#define int long long
+
+/* PARTS OF CODE for fft taken from https://cp-algorithms.com/algebra/fft.html */
+
+
+const int mod = 998244353;
+const int root = 15311432; // which is basically 3 ^ 119 % mod
+const int root_1 = 469870224;
+const int root_pw = (1 << 23);
+
+int power(int a, int b, int mod=0) {
+	int pow = 1;
+	while(b > 0) {
+		if(b & 1) pow *= a;
+		b = b >> 1;	a *= a;
+		if(mod) pow %= mod, a %= mod;
+	}
+	return pow;
+}
+
+inline int inverse(int a) { // returns the modular inverse of 
+	return power(a % mod, mod - 2, mod);
+}
+
+// code for fft in O(nlogn)
+void fft(vector<int>& a, bool invert) {
+	int n = a.size();
+
+	/// this does the bit inversion 
+	for(int i = 1, j = 0; i < n; i++) {
+		int bit = n >> 1;
+		for(; j & bit; bit >>= 1) j ^= bit;
+		j ^= bit;
+		if(i < j) swap(a[i], a[j]);
 	}
 
-  public:
-	LazySegTree(vector<int> &A, int l, int r) {
-		L = l, R = r; val = 0;
-		if(l == r) {
-			data = A[l];
-			left = right = nullptr;
+	for(int len = 2; len <= n; len <<= 1) {
+		int wlen = invert ? root_1: root;
+		for(int i = len; i < root_pw; i <<= 1) {
+			wlen = wlen * wlen % mod;
 		}
-		else {
-			int m = (l + r) / 2;
-			left = new LazySegTree(A, l, m);
-			right = new LazySegTree(A, m+1, r);
-			data = left->data + right->data;
-		}
-	}
-
-	void update(int idx, int v) {
-		if(R == L) data = v;
-		else {
-			int m = (R + L) / 2;
-			if(idx <= m) left->update(idx, v);
-			else right->update(idx, v);
-			data = left->data + right->data;
-		}
-	}
-
-	void update(int l, int r, int v) {
-		data += v * (R - L + 1);
-		if(L == l && R == r) {
-			val += v;
-		}
-		else {
-			int m = (R + L) / 2;
-			if(r <= m) left->update(l, r, v);
-			else if(l > m) right->update(l, r, v);
-			else {
-				left->update(l, m, v);
-				right->update(m+1, r, v);
+		for(int i = 0; i < n; i += len) {
+			int w = 1;
+			for(int j = 0; j < len / 2; ++j) {
+				int u = a[i + j], v = a[i + j + len / 2] * w % mod;
+				a[i + j] = u + v < mod ? u + v : u + v - mod;
+				a[i + j + len / 2] = u - v >= 0 ? u - v : u - v + mod;
+				w = w * wlen % mod;
 			}
 		}
 	}
 
-	int query(int l, int r) {
-		if(L == l && R == r) return data;
-		else {
-			push();
-			int m = (L + R) / 2;
-			if(r <= m) return left->query(l, r);
-			else if(l > m) return right->query(l, r);
-			else return left->query(l, m) + right->query(m+1, r);
+	if(invert) {
+		int n_1 = inverse(n);
+		for(int& x : a){
+			x = x * n_1 % mod;
 		}
 	}
+}
 
-	int query(int idx) { return query(idx, idx); }
+// a * b in O(nlogn)
+vector<int> multiply(vector<int> const &a, vector<int> const &b) {
 
-	void print() {
-		cout<<L<<" "<<R<<" : "<<data<<" "<<val<<endl;
-		if(left) {
-			left->print();
-			right->print();
-		}
+	vector<int> fa = a, fb = b;
+	int n = 1;
+	while(n < (int)a.size() + (int)b.size()) {
+		n <<= 1;
 	}
-};
+	fa.resize(n);
+	fb.resize(n);
 
-int main() {
-	vector<int> A = {2, -4, 3, 6, 10, 6, -4, -8, -3, 5};
-	LazySegTree AA(A, 0, 9);
-	AA.update(0, 9, 5);
-	cerr << AA.query(1);
-	AA.print();
+	fft(fa, false);
+	fft(fb, false);
+	for(int i = 0; i < n; i++) {
+		fa[i] = fa[i] * fb[i] % mod;
+	}
+	fft(fa, true);
+	while(fa.size() > 1 && fa.back() == 0) {
+		fa.pop_back();
+	}
+
+	return fa;
+}
+
+/* End of FFT Template */
+
+signed main() {
+	int t;
+	cin >> t;
+	while(t--) {
+		int n;
+		cin >> n;
+		vector<int> A(n+1), B(n+1);
+		for(int i=0; i<=n; i++) cin >> A[i];
+		for(int i=0; i<=n; i++) cin >> B[i];
+
+		// cerr<<A.size();
+		vector<int> c = multiply(A, B);
+		c.resize(2*n+1);
+		for(int i=0; i<c.size(); i++) cout<<c[i]<<" ";
+		cout<<endl;
+	}
 }
