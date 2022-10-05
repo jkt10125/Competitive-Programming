@@ -12,7 +12,6 @@ using namespace std;
 #define for_all(A) for(auto &it : A)
 
 #define fastIO ios::sync_with_stdio(0); cin.tie(0)
-#define output(a) { cout<<a; return; }
 
 typedef vector<int> vi;
 typedef vector<vi> vvi;
@@ -56,22 +55,15 @@ ostream& operator<<(ostream &os, const vT &v) {
 	return os;
 }
 
-ostream& operator<<(ostream &os, const bool &b) {
-	// (b) ? os << Yes : os << No;
-	os << ((b) ? Yes : No);
-	return os;
-}
-
 template <typename T>
 ostream& operator<<(ostream &os, const pTT &p) {
-	os << p.ff <<' ' << p.ss;
+	os << p.ff << ' ' << p.ss;
 	return os;
 }
 
 // !---> Code starts <---!
 
-void solve() 
-{
+void solve() {
 	
 }
 
