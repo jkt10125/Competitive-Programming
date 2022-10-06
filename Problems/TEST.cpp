@@ -103,6 +103,20 @@ void output(pitem t) {
 	cout << t->value << ' ';
 	output (t->r);
 }
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+template <typename T = int>
+using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+
+vector<int> factorial(int n, int mod=0) {
+	vector<int> fact(n+1, 1);
+	for(int i=1; i<=n; i++) {
+		factorial[i] = factorial[i-1] * i;
+		if(mod) factorial[i] %= mod;
+	}
+	return fact;
+}
 
 vector<int> kth_perm(int n, int k) {
     vector<int> perm(n), fact = factorial(n);

@@ -11,8 +11,8 @@ using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statisti
 vector<int> factorial(int n, int mod=0) {
 	vector<int> fact(n+1, 1);
 	for(int i=1; i<=n; i++) {
-		factorial[i] = factorial[i-1] * i;
-		if(mod) factorial[i] %= mod;
+		fact[i] = fact[i-1] * i;
+		if(mod) fact[i] %= mod;
 	}
 	return fact;
 }
