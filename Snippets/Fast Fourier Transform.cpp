@@ -1,11 +1,10 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
 #define int long long
 
 /* PARTS OF CODE for fft taken from https://cp-algorithms.com/algebra/fft.html */
-
 
 const int mod = 998244353;
 const int root = 15311432; // which is basically 3 ^ 119 % mod
