@@ -1,5 +1,6 @@
 /*
 Reference : https://cp-algorithms.com/data_structures/treap.html
+huge thanks to anubhavdhar for helping me in writing this code 
 Instructions: 	
 	PRIORITIES SHOULD BE DISTINCT 
 		I don't know why, but for some reason t2 in reverse() becomes NULL if there is a collision in priority
@@ -96,6 +97,23 @@ void append(pitem &t, treap_data_type val, int prior){
 	t ? merge(t, t, it) : (t = it, upd_cnt(t));
 }
 
+void right_cyclic_shift(pitem &t, int l, int r, int qty) {
+    qty = qty % (r-l+1);
+    pitem L, M, R;
+    split(t, M, R, r+1);
+    split(M, L, M, l);
+    pitem a, b;
+    split(M, a, b, r-l+1-qty);
+    merge(M, b, a);
+    merge(M, L, M);
+    merge(t, M, R);
+}
+
+void left_cyclic_shift(pitem &t, int l, int r, int qty) {
+    qty = qty % (r-l+1);
+    right_cyclic_shift(t, l, r, r-l+1-qty);
+}
+
 void output(pitem t) {
 	if(!t)  return;
 	push(t);
@@ -103,33 +121,9 @@ void output(pitem t) {
 	cout << t->value << ' ';
 	output (t->r);
 }
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
-template <typename T = int>
-using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
-
-vector<int> factorial(int n, int mod=0) {
-	vector<int> fact(n+1, 1);
-	for(int i=1; i<=n; i++) {
-		factorial[i] = factorial[i-1] * i;
-		if(mod) factorial[i] %= mod;
-	}
-	return fact;
-}
-
-vector<int> kth_perm(int n, int k) {
-    vector<int> perm(n), fact = factorial(n);
-    ordered_set<int> S;
-    for(int i=0; i<n; i++) S.insert(i);
-    for(int i=0; i<n; i++) { 
-        S.erase(perm[i] = *S.find_by_order(k / fact[n-i-1]));
-        k = k % fact[n-i-1];
-    }
-    return perm;
-}
 
 int main() {
-    vector<int> A = kth_perm(7, 2456);
-    
+	pitem s;
+	append(s, 4, 4);
+	output(s);
 }
