@@ -3,10 +3,10 @@ using namespace std;
 
 // #define int long long
 
-// #define FOR(i, a, b, c) for(int i=(int)a; i<=(int)b; i+=(int)c)
+#define FOR(i, a, b, c) for(int i=(int)a; i<=(int)b; i+=(int)c)
 #define F0R(i, n) for(int i=0; i<(int)n; i++)
 #define F1R(i, n) for(int i=1; i<=(int)n; i++)
-// #define FORn(i, a, b, c) for(int i=(int)a; i>=(int)b; i+=(int)c)
+#define FORn(i, a, b, c) for(int i=(int)a; i>=(int)b; i+=(int)c)
 #define F0Rn(i, n) for(int i=(int)n-1; i>=0; i--)
 #define F1Rn(i, n) for(int i=(int)n; i>=1; i--)
 #define for_all(A) for(auto &it : A)
