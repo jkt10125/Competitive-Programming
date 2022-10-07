@@ -6,7 +6,8 @@ Instructions:
 		I don't know why, but for some reason t2 in reverse() becomes NULL if there is a collision in priority
 		Make sure you do this my generating a random permutation of the sequence {1, 2, .. , N + Q} maybe
 	
-	In the first line change the typedef from int to char if you want to use this on a string
+	* In the first line change the typedef from int to char if you want to use this on a string
+	** always initialize your treap pointer with NULL
 */
 
 typedef int treap_data_type;
@@ -21,6 +22,8 @@ struct item {
 
 typedef item * pitem;
 
+// helper functions
+// ------------------------------------------------
 int cnt(pitem it) {
 	return it ? it->cnt : 0;
 }
@@ -38,7 +41,9 @@ void push(pitem it) {
 		if(it->r) it->r->rev ^= true;
 	}
 }
+// -----------------------------------------------
 
+// O(logn)
 void merge(pitem &t, pitem l, pitem r) {
 	push(l);
 	push(r);
@@ -51,6 +56,7 @@ void merge(pitem &t, pitem l, pitem r) {
 	upd_cnt(t);
 }
 
+// O(logn)
 void split(pitem t, pitem &l, pitem &r, int key, int add = 0) { // apparantly splits (< T) and (>= T)
 	if(!t) return void( l = r = 0 );
 	push(t);
@@ -64,6 +70,7 @@ void split(pitem t, pitem &l, pitem &r, int key, int add = 0) { // apparantly sp
 	upd_cnt(t);
 }
 
+// O(logn)
 void insert(pitem &t, treap_data_type val, int prior, int i) { // inserts before the i-th index (This will become the i-th index);
 	pitem t1, t2, it = new item(val, prior);
 	split(t, t1, t2, i);
@@ -71,6 +78,7 @@ void insert(pitem &t, treap_data_type val, int prior, int i) { // inserts before
 	merge(t, t1, t2);
 }
 
+// O(logn)
 void reverse(pitem &t, int l, int r) {
 	pitem t1, t2, t3;
 	split(t, t1, t2, l);
@@ -80,21 +88,24 @@ void reverse(pitem &t, int l, int r) {
 	merge(t, t, t3);
 }
 
-void erase(pitem &t, int i){
+// O(logn)
+void erase(pitem &t, int idx, int len = 1) {
 	pitem t1, t2, t3;
-	split(t, t1, t2, i);
-	split(t2, t2, t3, 1);
+	split(t, t1, t2, idx);
+	split(t2, t2, t3, len);
 	merge(t, t1, t3);
 	delete t2;
 }
 
+// O(logn)
 void append(pitem &t, treap_data_type val, int prior){
 	pitem it = new item(val, prior);
 	it->cnt = 1;
 	t ? merge(t, t, it) : (t = it, upd_cnt(t));
 }
 
-void right_cyclic_shift(pitem &t, int l, int r, int qty) {
+// O(logn)
+void right_cyclic_shift(pitem &t, int l, int r, int qty = 1) { 
     qty = qty % (r-l+1);
     pitem L, M, R;
     split(t, M, R, r+1);
@@ -106,13 +117,15 @@ void right_cyclic_shift(pitem &t, int l, int r, int qty) {
     merge(t, M, R);
 }
 
-void left_cyclic_shift(pitem &t, int l, int r, int qty) {
+// O(logn)
+void left_cyclic_shift(pitem &t, int l, int r, int qty = 1) { 
     qty = qty % (r-l+1);
     right_cyclic_shift(t, l, r, r-l+1-qty);
 }
 
-void output(pitem t) {
-	if(!t)  return;
+// O(n)
+void output(pitem t) { 
+	if(!t) return;
 	push(t);
 	output(t->l);
 	cout << t->value << ' ';
