@@ -1,9 +1,3 @@
-#include <bits/stdc++.h>
-
-using namespace std;
-
-#define int long long
-
 /* PARTS OF CODE for fft taken from https://cp-algorithms.com/algebra/fft.html */
 
 const int mod = 998244353;
@@ -86,14 +80,3 @@ vector<int> multiply(vector<int> const &a, vector<int> const &b) {
 }
 
 /* End of FFT Template */
-
-signed main() {
-    vector<int> A = {1, 3, 0, 5};
-    vector<int> B = {0, 3, 2, 4};
-
-    // cerr<<A.size();
-    vector<int> c = multiply(A, B);
-    for(int i=0; i<c.size(); i++) {
-        cerr<<i<<" : "<<c[i]<<endl;
-    }
-}
