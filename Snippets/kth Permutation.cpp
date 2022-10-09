@@ -19,6 +19,7 @@ vector<int> factorial(int n, int mod=0) {
 
 vector<int> kth_perm(int n, int k) {
     vector<int> perm(n), fact = factorial(n);
+    assert(k < fact[n]);
     ordered_set<int> S;
     for(int i=0; i<n; i++) S.insert(i);
     for(int i=0; i<n; i++) { 
