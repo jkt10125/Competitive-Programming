@@ -19,7 +19,7 @@ signed main(int argc, char *argv[]) {
     for(int i = 1; i<argc; i++) {
         int n = atoi(argv[i]);
         vector<int> A = rand(n);
-        for(auto it : A) cout << it << " ";
+        for(auto it : A) cout << it << ' ';
         cout<<endl;
     }
     return 0;
