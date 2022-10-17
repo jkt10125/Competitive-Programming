@@ -1,12 +1,14 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+uniform_int_distribution<int> uid(0, INT_MAX);
+
 vector<int> rand(int n) {
     vector<int> A(n);
     for(int i=0; i<n; i++) A[i] = i + 1;
-    srand(time(NULL));
     while(n) {
-        int idx = rand() % n;
+        int idx = uid(rng) % n;
         swap(A[idx], A[n-1]);
         n--;
     }
@@ -14,12 +16,11 @@ vector<int> rand(int n) {
 }
 
 signed main(int argc, char *argv[]) {
-    srand(time(NULL));
-    
-    int n = atoi(argv[1]);
-
-    vector<int> A = rand(n);
-    for(auto it : A) cout << it << " ";
-    cout<<endl;
+    for(int i = 1; i<argc; i++) {
+        int n = atoi(argv[i]);
+        vector<int> A = rand(n);
+        for(auto it : A) cout << it << " ";
+        cout<<endl;
+    }
     return 0;
 }
