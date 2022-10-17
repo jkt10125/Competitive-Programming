@@ -6,7 +6,7 @@ uniform_int_distribution<int> uid(0, INT_MAX);
 
 vector<int> rand(int n) {
     vector<int> A(n);
-    for(int i=0; i<n; i++) A[i] = i + 1;
+    for(int i=0; i<n; i++) A[i] = i;
     while(n) {
         int idx = uid(rng) % n;
         swap(A[idx], A[n-1]);
