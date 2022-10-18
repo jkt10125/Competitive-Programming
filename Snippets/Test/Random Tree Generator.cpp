@@ -6,9 +6,13 @@ uniform_int_distribution<int> uid(0, INT_MAX);
 
 vector<int> rand_tree(int n) {
     vector<int> A(n);
+    const int CHILD_CONSTRAINT = 13;
+    vector<int> child(n);
     for(int i=1; i<n; i++) {
         int par = uid(rng) % i;
+        while(child[par] == CHILD_CONSTRAINT) par = uid(rng) % i;
         A[i] = par;
+        child[par]++;
     }
     return A;
 }
