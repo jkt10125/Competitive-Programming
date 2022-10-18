@@ -32,7 +32,7 @@ vector<int> rand_mask(int n) {
 vector<int> rand_arr(int n) {
     vector<int> A(n);
     for(int i=0; i<n; i++) {
-        A[i] = uid(rng) % n;
+        A[i] = uid(rng) % n + 1;
     }
     return A;
 }
@@ -40,7 +40,7 @@ vector<int> rand_arr(int n) {
 signed main(int argc, char *argv[]) {
     int n = atoi(argv[1]);
     vector<int> A = rand_tree(n);
-    vector<int> B = rand_mask(n);
+    vector<int> B = rand_mask(n); /* Mask Array */
     // vector<int> W = rand_arr(n); /* Weight Array */
 
     cout << n << endl;
