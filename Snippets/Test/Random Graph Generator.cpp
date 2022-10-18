@@ -9,8 +9,7 @@ vector<pair<int, int>> rand_graph(int n, int m) {
     set<pair<int, int>> tmp;
     for(int i=1; i<min(n, m+1); i++) {
         int u = uid(rng) % i;
-        if(uid(rng) & 1) A[i-1] = {i, u};
-        else A[i-1] = {u, i};
+        A[i-1] = {i, u};
         tmp.insert({i, u});
         tmp.insert({u, i});
     }
@@ -32,8 +31,7 @@ vector<int> rand_mask(int n) {
     vector<int> A(n);
     for(int i=0; i<n; i++) A[i] = i;
     while(n > 1) {
-        int idx = uid(rng) % (n-1) + 1; /* if root(0) is fixed */
-        // int idx = uid(rng) % n; /* if root is not fixed */
+        int idx = uid(rng) % (n-1) + 1;
         swap(A[idx], A[n-1]);
         n--;
     }
