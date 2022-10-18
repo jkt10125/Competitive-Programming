@@ -9,7 +9,8 @@ vector<pair<int, int>> rand_graph(int n, int m) {
     set<pair<int, int>> tmp;
     for(int i=1; i<min(n, m+1); i++) {
         int u = uid(rng) % i;
-        A[i-1] = {i, u};
+        A[i-1] = (uid(rng) & 1) ? make_pair(u, i) : make_pair(i, u);
+        // A[i-1] = {u, i}; /* for DAG */
         tmp.insert({i, u});
         tmp.insert({u, i});
     }
@@ -23,6 +24,7 @@ vector<pair<int, int>> rand_graph(int n, int m) {
         tmp.insert({u, v});
         tmp.insert({v, u});
         A[i] = {u, v};
+        // A[i] = {min(u, v), max(u, v)}; /* for DAG */
     }
     return A;
 }
@@ -31,7 +33,7 @@ vector<int> rand_mask(int n) {
     vector<int> A(n);
     for(int i=0; i<n; i++) A[i] = i;
     while(n > 1) {
-        int idx = uid(rng) % (n-1) + 1;
+        int idx = uid(rng) % n;
         swap(A[idx], A[n-1]);
         n--;
     }
@@ -52,10 +54,10 @@ signed main(int argc, char *argv[]) {
 
     vector<pair<int, int>> A = rand_graph(n, m);
     vector<int> B = rand_mask(n); /* Mask Array */
-    vector<int> W = rand_arr(m); /* Weight array */
+    // vector<int> W = rand_arr(m); /* Weight array */
     cout << n << ' ' << m << endl;
     for(int i=0; i<m; i++) {
-        cout << B[A[i].first] << ' ' << B[A[i].second] << ' ' << W[i] << endl;
+        cout << B[A[i].first] << ' ' << B[A[i].second] << endl;
     }
     return 0;
 }
