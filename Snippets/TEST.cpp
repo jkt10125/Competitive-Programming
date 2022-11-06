@@ -1,35 +1,36 @@
 #include <bits/stdc++.h>
 using namespace std;
+std::vector<std::array<int, 2>> divisors(int n) {
+    std::vector<int> p;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) {
+            p.push_back(i);
+            while (n % i == 0) {
+                n /= i;
+            }
+        }
+    }
+    if (n > 1) {
+        p.push_back(n);
+    }
+    
+    n = p.size();
+    std::vector<std::array<int, 2>> a(1 << n);
+    a[0] = {1, 1};
+    for (int i = 1; i < (1 << n); i++) {
+        int j = __builtin_ctz(i);
+        auto [x, y] = a[i ^ (1 << j)];
+        a[i] = {x * p[j], -y};
+    }
+    return a;
+}
 
-#define int long long
-
-const int mod = 1000000007;
-
-signed main() {
-	int n;
-	cin >> n;
-	int dp[5][n+1];
-	for(int i=0; i<=n; i++) {
-		dp[0][i] = 0;
-		dp[1][i] = 0;
-		dp[2][i] = 0;
-		dp[3][i] = 0;
-		dp[4][i] = 0;
+int main() {
+	auto d = divisors(60);
+	for(auto it : d) {
+		for(auto i : it) {
+			cout << i << ' ';
+		}
+		cout << endl;
 	}
-
-	dp[0][1] = 1;
-	dp[1][1] = 1;
-	dp[2][1] = 1;
-	dp[3][1] = 1;
-	dp[4][1] = 1;
-
-	for(int i=2; i<=n; i++) {
-		dp[0][i] = dp[1][i-1] % mod;
-		dp[1][i] = (dp[0][i-1] + dp[2][i-1]) % mod;
-		dp[3][i] = (dp[2][i-1] + dp[4][i-1]) % mod;
-		dp[4][i] = dp[0][i-1] % mod;
-		dp[2][i] = (dp[0][i-1] + dp[1][i-1] + dp[3][i-1] + dp[4][i-1]) % mod;
-	}
-
-	cout << dp[0][n] + dp[1][n] + dp[2][n] + dp[3][n] + dp[4][n] << endl;
 }

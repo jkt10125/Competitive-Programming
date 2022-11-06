@@ -4,7 +4,8 @@ vector<bool> sieve(int n) {
 	isPrime[0] = isPrime[1] = false;
 	int ctr = 2;
 	while(ctr <= n) {
-		for(int i=(ctr<<1); i<=n; i+=ctr) isPrime[i] = false;
+		for(int i=(ctr<<1); i<=n; i+=ctr)
+			isPrime[i] = false;
 		ctr++;
 		while(ctr <= n && isPrime[ctr] == false) ctr++;
 	}
@@ -12,7 +13,7 @@ vector<bool> sieve(int n) {
 }
 
 // TC : O(n) -> gives all the primes less than n
-vector<int> SIEVE(int n) {
+vector<int> sieve(int n) {
 	vector<int> prime, min_prime_factor(n + 1, 0);
 	for(int i=2; i<=n; i++) {
 		if(min_prime_factor[i] == 0) { 
