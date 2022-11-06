@@ -63,6 +63,11 @@ ostream& operator<<(ostream &os, const pTT &p) {
 
 // !---> Code starts <---!
 
+void do_once() {
+	// functions that are called only once
+	
+}
+
 void solve() {
 	
 }
@@ -70,6 +75,7 @@ void solve() {
 signed main()
 {
 	fastIO;
+	do_once();
 	int t = 1;
 	cin >> t;
 	F1R(_i, t) {

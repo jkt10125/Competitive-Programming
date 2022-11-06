@@ -1,38 +1,41 @@
-// TC : O(sqrt(n))
-vector<pair<int, int>> factors(int n) {
-	vector<pair<int, int>> factor(1);
-	for(int i=2; i*i <= n; i++) {
-		while(n % i == 0) {
-			if(factor.back().first == i) factor.back().second++;
-			else factor.push_back({i, 1});
-			n /= i;
+#include <bits/stdc++.h>
+using namespace std;
+
+const int N = 2e6;
+vector<int> prime; 
+// do_once() : sieve(N)
+
+void sieve (int n) {
+	vector<int> min_prime_factor (n + 1, 0);
+	for (int i = 2; i <= n; i++) {
+		if (min_prime_factor[i] == 0) { 
+			min_prime_factor[i] = i;
+			prime.push_back(i); 
+		}
+		for (int p : prime) {
+			if(p > min_prime_factor[i] || i * p > n) break;
+			min_prime_factor[i * p] = p;
 		}
 	}
-	if(n > 1) factor.push_back({n, 1});
-	return factor;
 }
 
+vector<array<int, 2>> factor (int n) {
+    vector<array<int, 2>> p;
+    for (int i : prime) {
+        if (i * i > n) break;
+        if (n % i == 0) {
+            p.push_back({i, 0});
+            while (n % i == 0) {
+                n /= i;
+                p.back()[1]++;
+            }
+        }
+    }
+    if (n > 1) {
+        p.push_back({n, 1});
+    }
 
-// TC : O(sqrt(n)) : MORE OPTIMISED
-vector<int> factors(int n) {
-    vector<int> A;
-    for (int d : {2, 3, 5}) {
-        while (n % d == 0) {
-            A.push_back(d);
-            n /= d;
-        }
-    }
-    static array<int, 8> incr = {4, 2, 4, 2, 4, 6, 2, 6};
-    int i = 0;
-    for (int d = 7; d * d <= n; d += incr[i++]) {
-        while (n % d == 0) {
-            A.push_back(d);
-            n /= d;
-        }
-        if(i == 8) i = 0;
-    }
-    if(n > 1) A.push_back(n);
-    return A;
+    return p;
 }
 
 // below code is extremely helpful in applying inclusion-exclusion principle
