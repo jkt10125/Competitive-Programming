@@ -14,13 +14,17 @@ signed main() {
         cin >> a >> b >> c >> d;
         int p = a * b;
         int p1 = -1, p2 = -1;
+        bool ok = false;
         for(int i=a+1; i<=c; i++) {
+            if(ok) break;
             int k = i / __gcd(p, i);
             k = p * k / i;
             for(int j=k; j<=d; j+=k) {
                 if(j>b) {
                     p1 = i;
                     p2 = j;
+                    ok = true;
+                    break;
                 }
             }
         }

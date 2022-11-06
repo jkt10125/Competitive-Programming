@@ -3,24 +3,26 @@ using namespace std;
 
 int main() {
     int n, m, k;
-    cin >> n >> m >> k; 
+    cin >> n >> m >> k;
     vector<int> A(n);
-    set<pair<int, int>> S;
-    for(int i=0; i<n; i++) cin >> A[i];
-    sort(A.begin(), A.end());
-    for(int i=0; i<n; i++) {
+    multiset<int> B;
+    for(int &i : A) cin >> i;
+    for(int i=0; i<m; i++) {
         int x;
         cin >> x;
-        S.insert({x, i});
+        B.insert(x);
     }
 
-    int ctr = 0;
-    for(int i=0; i<n; i++) {
-        auto it = S.lower_bound({A[i]-k, -1});
-        if(it == S.end()) continue;
-        if(it->first-A[i] > k) continue;
-        ctr++;
-        S.erase(it);
+    sort(A.begin(), A.end());
+    int ans = 0;
+    for(int i : A) {
+        auto a = B.upper_bound(i-k-1);
+        if(a == B.end()) continue;
+        if(*a <= i+k) {
+            ans++;
+            B.erase(B.find(*a));
+        }
     }
-    cout<<ctr;
+
+    cout << ans;
 }
