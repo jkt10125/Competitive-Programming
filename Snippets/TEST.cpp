@@ -25,34 +25,20 @@ std::vector<std::array<int, 2>> divisors(int n) {
     return a;
 }
 
-vector<int> factors(int n) {
-    vector<int> A;
-    for (int d : {2, 3, 5}) {
-        while (n % d == 0) {
-            A.push_back(d);
-            n /= d;
-        }
+int f(int a, int m) { // TC : sqrt(a)
+    // for 1 <= x <= m
+    // return #(gcd(a, x) = 1)
+    int ans = 0;
+    for(auto [x, y] : divisors(a)) {
+        ans += y * (m / x);
     }
-    static array<int, 8> incr = {4, 2, 4, 2, 4, 6, 2, 6};
-    int i = 0;
-    for (int d = 7; d * d <= n; d += incr[i++]) {
-        while (n % d == 0) {
-            A.push_back(d);
-            n /= d;
-        }
-        if(i == 8) i = 0;
-    }
-    if(n > 1) A.push_back(n);
-    return A;
+    return ans;
 }
 
 int main() {
-	auto d = trial_division3(420);
-	for(auto it : d) {
-		// for(auto i : it) {
-		// 	cout << i << ' ';
-		// }
-		cout << it << ' ';
-		cout << endl;
-	}
+    
+
+    cout << f(1, 60);
+
+
 }

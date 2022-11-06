@@ -61,5 +61,15 @@ vector<array<int, 2>> divisors(int n) {
     return a;
 }
 
+int f(int a, int m) { // TC : sqrt(a)
+    // for 1 <= x <= m
+    // return #(gcd(a, x) = 1)
+    int ans = 0;
+    for(auto [x, y] : divisors(a)) {
+        ans += y * (m / x);
+    }
+    return ans;
+}
+
 // NOTE : we can actually reduce the stress on the machine if we have multiple same values
 // by maintaining a hash_map of vectors
