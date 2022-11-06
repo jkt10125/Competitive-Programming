@@ -35,5 +35,31 @@ vector<int> factors(int n) {
     return A;
 }
 
+// below code is extremely helpful in applying inclusion-exclusion principle
+vector<array<int, 2>> divisors(int n) {
+    vector<int> p;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) {
+            p.push_back(i);
+            while (n % i == 0) {
+                n /= i;
+            }
+        }
+    }
+    if (n > 1) {
+        p.push_back(n);
+    }
+    
+    n = p.size();
+    vector<array<int, 2>> a(1 << n);
+    a[0] = {1, 1};
+    for (int i = 1; i < (1 << n); i++) {
+        int j = __builtin_ctz(i);
+        auto [x, y] = a[i ^ (1 << j)];
+        a[i] = {x * p[j], -y};
+    }
+    return a;
+}
+
 // NOTE : we can actually reduce the stress on the machine if we have multiple same values
 // by maintaining a hash_map of vectors
