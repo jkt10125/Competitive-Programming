@@ -13,17 +13,20 @@ vector<bool> sieve(int n) {
 }
 
 // TC : O(n) -> gives all the primes less than n
-vector<int> sieve(int n) {
-	vector<int> prime, min_prime_factor(n + 1, 0);
-	for(int i=2; i<=n; i++) {
-		if(min_prime_factor[i] == 0) { 
+const int N = 2e5 + 7;
+vector<int> prime; 
+// do_once() : sieve(N)
+
+void sieve (int n) {
+	vector<int> min_prime_factor (n + 1, 0);
+	for (int i = 2; i <= n; i++) {
+		if (min_prime_factor[i] == 0) { 
 			min_prime_factor[i] = i;
 			prime.push_back(i); 
 		}
-		for(int p : prime) {
+		for (int p : prime) {
 			if(p > min_prime_factor[i] || i * p > n) break;
 			min_prime_factor[i * p] = p;
 		}
 	}
-	return prime;
 }
