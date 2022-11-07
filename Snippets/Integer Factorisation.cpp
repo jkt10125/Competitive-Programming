@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int N = 2e6;
+const int N = 2e5 + 7;
 vector<int> prime; 
 // do_once() : sieve(N)
 
@@ -35,6 +35,26 @@ vector<array<int, 2>> factor (int n) {
         p.push_back({n, 1});
     }
 
+    return p;
+}
+
+//NOTE: If the function is called less number of times then directly use the 
+//  sqrt n method else calculate the primes first and then iterate over primes only!
+
+vector<array<int, 2>> factor (int n) {
+    vector<array<int, 2>> p;
+    for(int i = 2; i * i <= n; i++) {
+        if(n % i == 0) {
+            p.push_back({i, 0});
+            while(n % i == 0) {
+                n /= i;
+                p.back()[1]++;
+            }
+        }
+    }
+    if (n > 1) {
+        p.push_back({n, 1});
+    }
     return p;
 }
 
