@@ -19,6 +19,7 @@ T power(T a, long long b) {
     }
     return res;
 }
+
 class cint {
     int x;
     public:
