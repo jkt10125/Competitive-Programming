@@ -1,7 +1,7 @@
 // TC : O(n)
 // Generates all factorials from 1 to n
 
-const int N = 2e6;
+const int N = 2e5;
 vector<int> fac;
 vector<int> ifac;
 // do_once() : fact(N)
