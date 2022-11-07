@@ -2,12 +2,13 @@
 using namespace std;
 
 constexpr int P = 998244353;
-// assume -P <= x < 2P
+
 int norm(int x) {
     if (x < 0) { x += P; }
     if (x >= P) { x -= P; }
     return x;
 }
+
 template <class T>
 T power(T a, long long b) {
     T res = 1;
@@ -91,10 +92,3 @@ class cint {
     }
 };
 
-int main() {
-    cint a = 6;
-    cint b = 2;
-    int c = 7;
-    int d = 2;
-    cout << a * b.inv();
-}
