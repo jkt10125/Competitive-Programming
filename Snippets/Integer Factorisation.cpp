@@ -38,6 +38,15 @@ vector<array<int, 2>> factor (int n) {
     return p;
 }
 
+// function to find ETF of n
+int phi (int n) {
+    int ans = n;
+    for(auto [i, x] : factor(n)) {
+        ans = ans - (ans / i);
+    }
+    return ans;
+}
+
 // below code is extremely helpful in applying inclusion-exclusion principle
 vector<array<int, 2>> divisors(int n) {
     vector<int> p;

@@ -1,4 +1,7 @@
+#include <bits/stdc++.h>
+using namespace std;
 // TC : O(sqrt(n))
+
 int phi(int n) {
 	int ans = n;
 	for(int i=2; i*i<=n; i++) {
