@@ -35,7 +35,7 @@ int main() {
         int u, v, w;
         cin >> u >> v >> w;
         A[u].push_back({v, w});
-        A[v].push_back({u, w});
+        // A[v].push_back({u, w});
     }
 
     for(int i : dijkstra(0)) cout << i << ' ';
