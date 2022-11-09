@@ -6,9 +6,9 @@ vector<vector<array<int, 2>>> A;
 vector<int> bfs(int n) {
     deque<int> s;
     vector<int> dist(A.size(), INT_MAX);
-    // vector<int> par(A.size(), -1);
+    vector<int> par(A.size(), -1);
 
-    // par[n] = n;
+    par[n] = n;
     dist[n] = 0;
 
     s.push_back(n);
@@ -20,8 +20,6 @@ vector<int> bfs(int n) {
                 dist[u] = dist[b] + w;
                 if (w) s.push_back(u);
                 else s.push_front(u);
-
-                // par[u] = b;
             }
         }
     }
@@ -32,13 +30,15 @@ vector<int> bfs(int n) {
 int main() {
     int n, m;
     cin >> n >> m;
-    A.resize(n);
+    A.resize(n+1);
     for (int i=0; i<m; i++) {
-        int u, v, w;
-        cin >> u >> v >> w;
-        A[u].push_back({v, w});
+        int u, v;
+        cin >> u >> v;
+        A[u].push_back({v, 0});
+        A[v].push_back({u, 1});
     }
+    int a = bfs(1)[n];
 
-    for(int i : bfs(0)) cout << i << ' ';
-    
+    if (a == INT_MAX) cout << -1;
+    else cout << a;    
 }
