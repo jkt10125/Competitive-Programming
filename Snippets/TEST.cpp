@@ -1,44 +1,155 @@
 #include <bits/stdc++.h>
 using namespace std;
-std::vector<std::array<int, 2>> divisors(int n) {
-    std::vector<int> p;
-    for (int i = 2; i * i <= n; i++) {
-        if (n % i == 0) {
-            p.push_back(i);
-            while (n % i == 0) {
-                n /= i;
-            }
-        }
+
+class mint {
+    int M, x;
+    
+    int norm (int val) const {
+        if (val < 0)  val += M;
+        if (val >= M) val -= M;
+        return val;
     }
-    if (n > 1) {
-        p.push_back(n);
+
+    int power (long long a, int b) const {
+        int pow = 1;
+        while (b) {
+            if (b & 1) {
+                pow = pow * a % M;
+            } 
+            a = a * a % M;
+            b >>= 1;
+        }
+        return pow;
+    }
+
+    public:
+    mint (int mod, int val = 0) : M(mod), x(norm(val)) { }
+    mint (int mod, long long val) : M(mod), x(norm(val % M)) { }
+
+    int val () { return x; }
+
+    mint operator - () const {
+        return mint (M, M - x);
+    }
+
+    mint inv () const {
+        return mint (M, power(x, M - 2));
+    }
+
+    mint &operator *= (const mint &rhs) {
+        assert(M == rhs.M);
+        x = (long long)x * rhs.x % M;
+        return *this;
+    }
+
+    mint &operator /= (const mint &rhs) {
+        assert(M == rhs.M);
+        return *this *= rhs.inv();
+    }
+
+    mint &operator += (const mint &rhs) {
+        assert(M == rhs.M);
+        x = norm(x + rhs.x);
+        return *this;
+    }
+
+    mint &operator -= (const mint &rhs) {
+        assert(M == rhs.M);
+        x = norm(x - rhs.x);
+        return *this;
+    }
+
+    mint operator * (const mint &rhs) {
+        mint res = *this;
+        res *= rhs;
+        return res;
+    }
+
+    mint operator / (const mint &rhs) {
+        mint res = *this;
+        res /= rhs;
+        return res;
+    }
+
+    mint operator + (const mint &rhs) {
+        mint res = *this;
+        res += rhs;
+        return res;
+    }
+
+    mint operator - (const mint &rhs) {
+        mint res = *this;
+        res -= rhs;
+        return res;
     }
     
-    n = p.size();
-    std::vector<std::array<int, 2>> a(1 << n);
-    a[0] = {1, 1};
-    for (int i = 1; i < (1 << n); i++) {
-        int j = __builtin_ctz(i);
-        auto [x, y] = a[i ^ (1 << j)];
-        a[i] = {x * p[j], -y};
+    template <typename T>
+    void operator = (const T val) {
+        *this = mint(M, val);
     }
-    return a;
-}
 
-int f(int a, int m) { // TC : sqrt(a)
-    // for 1 <= x <= m
-    // return #(gcd(a, x) = 1)
-    int ans = 0;
-    for(auto [x, y] : divisors(a)) {
-        ans += y * (m / x);
+    template <typename T>
+    mint &operator *= (const T val) {
+        return *this *= mint(M, val);
     }
-    return ans;
-}
+    
+    template <typename T>
+    mint &operator /= (const T val) {
+        return *this /= mint(M, val);
+    }
+    
+    template <typename T>
+    mint &operator += (const T val) {
+        return *this += mint(M, val);
+    }
+    
+    template <typename T>
+    mint &operator -= (const T val) {
+        return *this -= mint(M, val);
+    }
+
+    template <typename T>
+    mint &operator * (const T &val) {
+        mint res = *this;
+        res *= mint(M, val);
+        return res;
+    }
+
+    template <typename T>
+    mint &operator / (const T &val) {
+        mint res = *this;
+        res /= mint(M, val);
+        return res;
+    }
+    
+    template <typename T>
+    mint &operator + (const T &val) {
+        mint res = *this;
+        res += mint(M, val);
+        return res;
+    }
+
+    template <typename T>
+    mint &operator - (const T &val) {
+        mint res = *this;
+        res -= mint(M, val);
+        return res;
+    }
+
+    friend ostream &operator << (ostream &os, const mint &rhs) {
+        return os << rhs.x;
+    }
+
+    // friend istream &operator >> (istream &is, mint &rhs) {
+    //     int val;
+    //     is >> val;
+    //     rhs = mint(???, val);
+    //     return is;
+    // } 
+};
+
+const int a = 14;
 
 int main() {
     
-
-    cout << f(1, 60);
-
-
 }
