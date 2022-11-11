@@ -10,19 +10,15 @@ class mint {
         return val;
     }
 
-    int power (long long a, int b) const {
-        int pow = 1;
-        while (b) {
-            if (b & 1) {
-                pow = pow * a % M;
-            } 
-            a = a * a % M;
-            b >>= 1;
+    public:
+    mint power (mint a, int b) const {
+        mint res(a.M, 1);
+        for (; b; b >>= 1, a *= a) {
+            if (b & 1) res *= a;
         }
-        return pow;
+        return res;
     }
 
-    public:
     mint (int mod, int val = 0) : M(mod), x(norm(val)) { }
     mint (int mod, long long val) : M(mod), x(norm(val % M)) { }
 
@@ -33,7 +29,7 @@ class mint {
     }
 
     mint inv () const {
-        return mint (M, power(x, M - 2));
+        return power(*this, M - 2);
     }
 
     mint &operator *= (const mint &rhs) {
@@ -85,7 +81,7 @@ class mint {
     
     template <typename T>
     void operator = (const T val) {
-        *this = mint(M, val);
+        x = norm(val);
     }
 
     template <typename T>
@@ -109,28 +105,28 @@ class mint {
     }
 
     template <typename T>
-    mint &operator * (const T &val) {
+    mint operator * (const T val) {
         mint res = *this;
         res *= mint(M, val);
         return res;
     }
 
     template <typename T>
-    mint &operator / (const T &val) {
+    mint operator / (const T &val) {
         mint res = *this;
         res /= mint(M, val);
         return res;
     }
     
     template <typename T>
-    mint &operator + (const T &val) {
+    mint operator + (const T &val) {
         mint res = *this;
         res += mint(M, val);
         return res;
     }
 
     template <typename T>
-    mint &operator - (const T &val) {
+    mint operator - (const T &val) {
         mint res = *this;
         res -= mint(M, val);
         return res;
@@ -139,17 +135,50 @@ class mint {
     friend ostream &operator << (ostream &os, const mint &rhs) {
         return os << rhs.x;
     }
-
-    // friend istream &operator >> (istream &is, mint &rhs) {
-    //     int val;
-    //     is >> val;
-    //     rhs = mint(???, val);
-    //     return is;
-    // } 
 };
 
-const int a = 14;
+const int m1 = 1000000007;
+const int m2 = 1000000009;
+const int hash_exp = 31;
 
-int main() {
+array<mint, 2> string_hash (string &s) { // O(n)
+    mint h1(m1, 0), exp1(m1, 1);
+    mint h2(m2, 0), exp2(m2, 1);
+    
+    for (char c : s) {
+        h1 += exp1 * (c - 'a' + 1);
+        h2 += exp2 * (c - 'a' + 1);
+        exp1 *= hash_exp;
+        exp2 *= hash_exp;
+    }
+
+    return {h1, h2};
+}
+
+vector<array<mint, 2>> p_hash;
+void generate_hash(string &s) { // O(n)
+    mint h1(m1, 0), exp1(m1, 1);
+    mint h2(m2, 0), exp2(m2, 1);
+
+    p_hash.assign(s.size(), {0, 0});
+    int i=0;
+    for (char c : s) {
+        h1 += exp1 * (c - 'a' + 1);
+        h2 += exp2 * (c - 'a' + 1);
+        exp1 *= hash_exp;
+        exp2 *= hash_exp;
+        p_hash[i++] = {h1, h2};
+    }
+}
+
+array<mint, 2> substring_hash (int l, int r) { // O(log n)
+    if (!l) return p_hash[r];
+    mint f1(m1, hash_exp), f2(m2, hash_exp);
+    f1 = (p_hash[r][0] - p_hash[l-1][0]) * f1.power(f1, l).inv();
+    f2 = (p_hash[r][1] - p_hash[l-1][1]) * f2.power(f2, l).inv();
+    return {f1, f2};
+}
+
+signed main() {
     
 }

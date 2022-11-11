@@ -72,7 +72,7 @@ signed main() {
     for(auto it : p_hash) {
         cerr<<it.first<<" "<<it.second<<endl;
     }
-    for(int i=0; i<=(int)(t.size()-s.size()); i++) {
-        if(h == substring_hash(i, (int)(i + s.size()-1))) cout<<"YES";
-    }
+    // for(int i=0; i<=(int)(t.size()-s.size()); i++) {
+    //     if(h == substring_hash(i, (int)(i + s.size()-1))) cout<<"YES";
+    // }
 }
