@@ -6,9 +6,7 @@ class mint {
     int M, x;
     
     int norm (int val) const {
-        if (val < 0)  val += M;
-        if (val >= M) val -= M;
-        return val;
+        return (val + M) % M;
     }
 
     public:
@@ -21,7 +19,6 @@ class mint {
     }
 
     mint (int mod, int val = 0) : M(mod), x(norm(val)) { }
-    mint (int mod, long long val) : M(mod), x(norm(val % M)) { }
 
     int val () const { return x; }
 
@@ -58,79 +55,101 @@ class mint {
 
     mint operator * (const mint &rhs) {
         mint res = *this;
-        res *= rhs;
-        return res;
+        return res *= rhs;
     }
 
     mint operator / (const mint &rhs) {
         mint res = *this;
-        res /= rhs;
-        return res;
+        return res /= rhs;
     }
 
     mint operator + (const mint &rhs) {
         mint res = *this;
-        res += rhs;
-        return res;
+        return res += rhs;
     }
 
     mint operator - (const mint &rhs) {
         mint res = *this;
-        res -= rhs;
-        return res;
-    }
-    
-    template <typename T>
-    void operator = (const T val) {
-        *this = mint(M, val);
+        return res -= rhs;
     }
 
-    template <typename T>
-    mint &operator *= (const T val) {
+    bool operator == (const mint &rhs) {
+        /* Only x is compared and not M */
+        return this->x == rhs.x;
+    }
+
+    mint &operator = (const mint &rhs) {
+        x = rhs.x;
+        M = rhs.M;
+        return *this;
+    }
+
+    bool operator == (const int &rhs) {
+        return this->x == rhs;
+    }
+
+    friend bool operator == (const int &lhs, const mint &rhs) {
+        return lhs == rhs.x;
+    }
+
+    void operator = (const int &val) {
+        x = norm(val);
+    }
+
+    mint &operator *= (const int val) {
         return *this *= mint(M, val);
     }
     
-    template <typename T>
-    mint &operator /= (const T val) {
+    mint &operator /= (const int val) {
         return *this /= mint(M, val);
     }
     
-    template <typename T>
-    mint &operator += (const T val) {
+    mint &operator += (const int val) {
         return *this += mint(M, val);
     }
     
-    template <typename T>
-    mint &operator -= (const T val) {
+    mint &operator -= (const int val) {
         return *this -= mint(M, val);
     }
 
-    template <typename T>
-    mint operator * (const T &val) {
+    mint operator * (const int &val) {
         mint res = *this;
-        res *= mint(M, val);
-        return res;
+        return res *= mint(M, val);
     }
 
-    template <typename T>
-    mint operator / (const T &val) {
+    mint operator / (const int &val) {
         mint res = *this;
-        res /= mint(M, val);
-        return res;
+        return res /= mint(M, val);
     }
     
-    template <typename T>
-    mint operator + (const T &val) {
+    mint operator + (const int &val) {
         mint res = *this;
-        res += mint(M, val);
-        return res;
+        return res += mint(M, val);
     }
 
-    template <typename T>
-    mint operator - (const T &val) {
+    mint operator - (const int &val) {
         mint res = *this;
-        res -= mint(M, val);
-        return res;
+        return res -= mint(M, val);
+    }
+
+    friend mint operator * (const int &lhs, const mint &rhs) {
+        mint res(rhs.M, lhs);
+        return res *= rhs;
+    }
+
+    friend mint operator / (const int &lhs, const mint &rhs) {
+        mint res(rhs.M, lhs);
+        return res /= rhs;
+    }
+
+    friend mint operator + (const int &lhs, const mint &rhs) {
+        mint res(rhs.M, lhs);
+        return res += rhs;
+    }
+
+    friend mint operator - (const int &lhs, const mint &rhs) {
+        mint res(rhs.M, lhs);
+        return res -= rhs;
     }
 
     friend ostream &operator << (ostream &os, const mint &rhs) {
@@ -146,5 +165,11 @@ class mint {
 };
 
 int main() {
-
+    int a = 21;
+    mint b(7, 6), c(13, 7), d(17, 5);
+    b = a;
+    d = a;
+    c = a;
+    b = c = d;
+    cout << b << c << d;
 }

@@ -1,13 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+constexpr int P = 998244353;
 class mint {
     int M, x;
     
     int norm (int val) const {
-        if (val < 0)  val += M;
-        if (val >= M) val -= M;
-        return val;
+        return (val + M) % M;
     }
 
     public:
@@ -20,165 +19,157 @@ class mint {
     }
 
     mint (int mod, int val = 0) : M(mod), x(norm(val)) { }
-    mint (int mod, long long val) : M(mod), x(norm(val % M)) { }
 
-    int val () { return x; }
-
-    mint operator - () const {
-        return mint (M, M - x);
-    }
+    int val () const { return x; }
 
     mint inv () const {
         return power(*this, M - 2);
     }
 
+    mint operator - () const {
+        return mint (M, M - x);
+    }
+
     mint &operator *= (const mint &rhs) {
-        assert(M == rhs.M);
+        assert (M == rhs.M);
         x = (long long)x * rhs.x % M;
         return *this;
     }
 
     mint &operator /= (const mint &rhs) {
-        assert(M == rhs.M);
+        assert (M == rhs.M);
         return *this *= rhs.inv();
     }
 
     mint &operator += (const mint &rhs) {
-        assert(M == rhs.M);
+        assert (M == rhs.M);
         x = norm(x + rhs.x);
         return *this;
     }
 
     mint &operator -= (const mint &rhs) {
-        assert(M == rhs.M);
+        assert (M == rhs.M);
         x = norm(x - rhs.x);
         return *this;
     }
 
     mint operator * (const mint &rhs) {
         mint res = *this;
-        res *= rhs;
-        return res;
+        return res *= rhs;
     }
 
     mint operator / (const mint &rhs) {
         mint res = *this;
-        res /= rhs;
-        return res;
+        return res /= rhs;
     }
 
     mint operator + (const mint &rhs) {
         mint res = *this;
-        res += rhs;
-        return res;
+        return res += rhs;
     }
 
     mint operator - (const mint &rhs) {
         mint res = *this;
-        res -= rhs;
-        return res;
+        return res -= rhs;
     }
-    
-    template <typename T>
-    void operator = (const T val) {
+
+    bool operator == (const mint &rhs) {
+        /* Only x is compared and not M */
+        return this->x == rhs.x;
+    }
+
+    mint &operator = (const mint &rhs) {
+        x = rhs.x;
+        M = rhs.M;
+        return *this;
+    }
+
+    bool operator == (const int &rhs) {
+        return this->x == rhs;
+    }
+
+    friend bool operator == (const int &lhs, const mint &rhs) {
+        return lhs == rhs.x;
+    }
+
+    void operator = (const int &val) {
         x = norm(val);
     }
 
-    template <typename T>
-    mint &operator *= (const T val) {
+    mint &operator *= (const int val) {
         return *this *= mint(M, val);
     }
     
-    template <typename T>
-    mint &operator /= (const T val) {
+    mint &operator /= (const int val) {
         return *this /= mint(M, val);
     }
     
-    template <typename T>
-    mint &operator += (const T val) {
+    mint &operator += (const int val) {
         return *this += mint(M, val);
     }
     
-    template <typename T>
-    mint &operator -= (const T val) {
+    mint &operator -= (const int val) {
         return *this -= mint(M, val);
     }
 
-    template <typename T>
-    mint operator * (const T val) {
+    mint operator * (const int &val) {
         mint res = *this;
-        res *= mint(M, val);
-        return res;
+        return res *= mint(M, val);
     }
 
-    template <typename T>
-    mint operator / (const T &val) {
+    mint operator / (const int &val) {
         mint res = *this;
-        res /= mint(M, val);
-        return res;
+        return res /= mint(M, val);
     }
     
-    template <typename T>
-    mint operator + (const T &val) {
+    mint operator + (const int &val) {
         mint res = *this;
-        res += mint(M, val);
-        return res;
+        return res += mint(M, val);
     }
 
-    template <typename T>
-    mint operator - (const T &val) {
+    mint operator - (const int &val) {
         mint res = *this;
-        res -= mint(M, val);
-        return res;
+        return res -= mint(M, val);
+    }
+
+    friend mint operator * (const int &lhs, const mint &rhs) {
+        mint res(rhs.M, lhs);
+        return res *= rhs;
+    }
+
+    friend mint operator / (const int &lhs, const mint &rhs) {
+        mint res(rhs.M, lhs);
+        return res /= rhs;
+    }
+
+    friend mint operator + (const int &lhs, const mint &rhs) {
+        mint res(rhs.M, lhs);
+        return res += rhs;
+    }
+
+    friend mint operator - (const int &lhs, const mint &rhs) {
+        mint res(rhs.M, lhs);
+        return res -= rhs;
     }
 
     friend ostream &operator << (ostream &os, const mint &rhs) {
         return os << rhs.x;
     }
+
+    // friend istream &operator >> (istream &is, mint &rhs) {
+    //     int val;
+    //     is >> val;
+    //     rhs = mint(???, val);
+    //     return is;
+    // } 
 };
 
-const int m1 = 1000000007;
-const int m2 = 1000000009;
-const int hash_exp = 31;
-
-array<mint, 2> string_hash (string &s) { // O(n)
-    mint h1(m1, 0), exp1(m1, 1);
-    mint h2(m2, 0), exp2(m2, 1);
-    
-    for (char c : s) {
-        h1 += exp1 * (c - 'a' + 1);
-        h2 += exp2 * (c - 'a' + 1);
-        exp1 *= hash_exp;
-        exp2 *= hash_exp;
-    }
-
-    return {h1, h2};
-}
-
-vector<array<mint, 2>> p_hash;
-void generate_hash(string &s) { // O(n)
-    mint h1(m1, 0), exp1(m1, 1);
-    mint h2(m2, 0), exp2(m2, 1);
-
-    p_hash.assign(s.size(), {0, 0});
-    int i=0;
-    for (char c : s) {
-        h1 += exp1 * (c - 'a' + 1);
-        h2 += exp2 * (c - 'a' + 1);
-        exp1 *= hash_exp;
-        exp2 *= hash_exp;
-        p_hash[i++] = {h1, h2};
-    }
-}
-
-array<mint, 2> substring_hash (int l, int r) { // O(log n)
-    if (!l) return p_hash[r];
-    mint f1(m1, hash_exp), f2(m2, hash_exp);
-    f1 = (p_hash[r][0] - p_hash[l-1][0]) * f1.power(f1, l).inv();
-    f2 = (p_hash[r][1] - p_hash[l-1][1]) * f2.power(f2, l).inv();
-    return {f1, f2};
-}
-
-signed main() {
-    
+int main() {
+    int a = 21;
+    mint b(7, 6), c(13, 7), d(17, 5);
+    b = a;
+    d = a;
+    c = a;
+    b = c = d;
+    cout << b << c << d;
 }
