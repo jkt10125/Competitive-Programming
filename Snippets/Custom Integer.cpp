@@ -27,7 +27,7 @@ class mint {
     }
 
     mint operator - () const {
-        return mint (M, M - x);
+        return mint (M, -x);
     }
 
     mint &operator *= (const mint &rhs) {
