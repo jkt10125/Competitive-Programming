@@ -84,14 +84,6 @@ class mint {
         return *this;
     }
 
-    bool operator == (const int &rhs) {
-        return this->x == rhs;
-    }
-
-    friend bool operator == (const int &lhs, const mint &rhs) {
-        return lhs == rhs.x;
-    }
-
     void operator = (const int &val) {
         x = norm(val);
     }
