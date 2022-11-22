@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-constexpr int P = 998244353;
 class mint {
     int M, x;
     
@@ -23,35 +22,35 @@ class mint {
     mint (int mod, int val = 0) : M(mod), x(norm(val)) { }
     mint (int mod, long long val) : M(mod), x(norm(val % M)) { }
 
-    int val () const { return x; }
-
-    mint inv () const {
-        return power(*this, M - 2);
-    }
+    int val () { return x; }
 
     mint operator - () const {
         return mint (M, M - x);
     }
 
+    mint inv () const {
+        return power(*this, M - 2);
+    }
+
     mint &operator *= (const mint &rhs) {
-        assert (M == rhs.M);
+        assert(M == rhs.M);
         x = (long long)x * rhs.x % M;
         return *this;
     }
 
     mint &operator /= (const mint &rhs) {
-        assert (M == rhs.M);
+        assert(M == rhs.M);
         return *this *= rhs.inv();
     }
 
     mint &operator += (const mint &rhs) {
-        assert (M == rhs.M);
+        assert(M == rhs.M);
         x = norm(x + rhs.x);
         return *this;
     }
 
     mint &operator -= (const mint &rhs) {
-        assert (M == rhs.M);
+        assert(M == rhs.M);
         x = norm(x - rhs.x);
         return *this;
     }
@@ -82,7 +81,7 @@ class mint {
     
     template <typename T>
     void operator = (const T val) {
-        *this = mint(M, val);
+        x = norm(val);
     }
 
     template <typename T>
@@ -106,95 +105,116 @@ class mint {
     }
 
     template <typename T>
-    mint &operator * (const T &val) {
+    mint operator * (const T val) {
         mint res = *this;
         res *= mint(M, val);
         return res;
     }
 
     template <typename T>
-    mint &operator / (const T &val) {
+    mint operator / (const T &val) {
         mint res = *this;
         res /= mint(M, val);
         return res;
     }
     
     template <typename T>
-    mint &operator + (const T &val) {
+    mint operator + (const T &val) {
         mint res = *this;
         res += mint(M, val);
         return res;
     }
 
     template <typename T>
-    mint &operator - (const T &val) {
+    mint operator - (const T &val) {
         mint res = *this;
         res -= mint(M, val);
         return res;
     }
 
+    bool operator == (const mint &A) {
+        return (this->x == A.x && this->M == A.M);
+    }
+
     friend ostream &operator << (ostream &os, const mint &rhs) {
         return os << rhs.x;
     }
-
-    // friend istream &operator >> (istream &is, mint &rhs) {
-    //     int val;
-    //     is >> val;
-    //     rhs = mint(???, val);
-    //     return is;
-    // } 
 };
 
-vector<array<int, 2>> divisors (int n) {
-    vector<int> p;
-    for (int i = 2; i * i <= n; i++) {
-        if(n % i == 0) {
-            p.push_back(i);
-            while(n % i == 0) n /= i;
-        }
+const int m1 = 1000000007;
+const int m2 = 1000000009;
+const int hash_exp = 31;
+
+array<mint, 2> string_hash (string &s) { // O(n)
+    mint h1(m1, 0), exp1(m1, 1);
+    mint h2(m2, 0), exp2(m2, 1);
+    
+    for (char c : s) {
+        h1 += exp1 * (c - 'a' + 1);
+        h2 += exp2 * (c - 'a' + 1);
+        exp1 *= hash_exp;
+        exp2 *= hash_exp;
     }
-    if (n > 1) p.push_back(n);
-    n = p.size();
-    vector<array<int, 2>> a(1 << n);
-    a[0] = {1, 1};
-    for (int i = 1; i < (1 << n); i++) {
-        int j = __builtin_ctz(i);
-        auto [x, y] = a[i ^ (1 << j)];
-        a[i] = {x * p[j], -y};
-    }
-    return a;
+
+    return {h1, h2};
 }
 
-mint f(int a, int m) {
-    // #gcd(a, x) = 1 : 1 <= x <= m
-    mint res(P);
-    res = 0;
-    for(auto [x, y] : divisors(a)) {
-        res += y * (m / x);
+vector<array<mint, 2>> p_hash;
+void generate_hash(string &s) { // O(n)
+    mint h1(m1, 0), exp1(m1, 1);
+    mint h2(m2, 0), exp2(m2, 1);
+
+    p_hash.assign(s.size(), {0, 0});
+    int i=0;
+    for (char c : s) {
+        h1 += exp1 * (c - 'a' + 1);
+        h2 += exp2 * (c - 'a' + 1);
+        exp1 *= hash_exp;
+        exp2 *= hash_exp;
+        p_hash[i++] = {h1, h2};
     }
-    return res;
 }
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(NULL);
+array<mint, 2> substring_hash (int l, int r) { // O(log n)
+    if (!l) return p_hash[r];
+    mint f1(m1, hash_exp), f2(m2, hash_exp);
+    f1 = (p_hash[r][0] - p_hash[l-1][0]) * f1.power(f1, l).inv();
+    f2 = (p_hash[r][1] - p_hash[l-1][1]) * f2.power(f2, l).inv();
+    return {f1, f2};
+}
+
+// bool f(array<mint, 2> a, array<mint, 2> b) {
+//     return (a[0] == b[0]) && (a[1] == b[1]);
+// }
+
+
+
+signed main() {
     int t;
     cin >> t;
     while(t--) {
-        int n, m;
-        cin >> n >> m;
-        vector<int> A(n);
-        for(int i=0; i<n; i++) cin >> A[i];
+        string s, t;
+        cin >> s >> t;
+        generate_hash(s);
+        array<mint, 2> key = string_hash(t);
 
-        mint ans(P);
-        ans = 1;
-        for(int i=1; i<n; i++) {
-            if(A[i-1] % A[i]) {
-                ans = 0;
-                break;
+        vector<int> A;
+        for (int i = 0; i <= s.size() - t.size(); i++) {
+            auto [x, y] = substring_hash(i, i + t.size() - 1);
+            auto [a, b] = key;
+            if (x == a && y == b) {
+                A.push_back(i + 1);
             }
-            else ans *= f((A[i-1]/A[i]), (m/A[i]));
+            // if (substring_hash(i, i + t.size() - 1) == key) {
+            //     A.push_back(i + 1);
+            // }
         }
-        cout << ans << endl;
+
+        if (A.empty()) cout << "Not Found";
+        else {
+            cout << A.size() << endl;
+            for (int i : A) cout << i << ' ';
+        }
+        cout << endl << endl;
     }
 }
