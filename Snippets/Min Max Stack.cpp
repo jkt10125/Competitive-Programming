@@ -1,8 +1,16 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class MinMaxSTACK {
-	vector<array<int, 3>> stack;
+int f (int a, int b) {
+	return min (a, b);
+}
+
+struct elem {
+	int v, x;
+};
+
+class Mstack {
+	vector<elem> stack;
 	public:
 	int size () const {
 		return stack.size();
@@ -10,35 +18,30 @@ class MinMaxSTACK {
 	bool empty () const {
 		return size();
 	}
-	void push (int a) {
-		int b = a, c = a;
+	void push (int v) {
+		int x = v;
 		if (size()) {
-			b = std::min(b, stack.back()[1]);
-			c = std::max(c, stack.back()[2]);
+			x = f (x, stack.back().x);
 		}
-		stack.push_back({a, b, c});
+		stack.push_back({v, x});
 	}
 
 	void pop () {
 		stack.pop_back();
 	}
 
-	int max () {
-		return stack.back()[2];
-	}
-
-	int min () {
-		return stack.back()[1];
+	int feature () {
+		return stack.back().x;
 	}
 
 	int top () {
-		return stack.back()[0];
+		return stack.back().v;
 	}
 
-	friend ostream & operator << (ostream &os, const MinMaxSTACK &S) {
+	friend ostream & operator << (ostream &os, const Mstack &S) {
 		int n = S.stack.size();
-		for (int i = n - 1; i > 0; i--) os << S.stack[i][0] << ' ';
-		if (!S.empty()) os << S.stack.front()[0];
+		for (int i = n - 1; i > 0; i--) os << S.stack[i].v << ' ';
+		if (!S.empty()) os << S.stack.front().v;
 		return os;
 	}
 };

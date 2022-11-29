@@ -1,21 +1,30 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class MinMaxQUEUE {
-	vector<array<int, 3>> push_st, pop_st;
+int f (int a, int b) {
+	return min (a, b);
+}
+
+struct elem {
+	int v, x;
+};
+
+class Mqueue {
+	vector<elem> push_st, pop_st;
 	void transfer () {
 		while (!push_st.empty()) {
-			auto [a, b, c] = push_st.back();
+			int v, x;
+			v = x = push_st.back().v;
 			if (!pop_st.empty()) {
-				b = std::min(b, pop_st.back()[1]);
-				c = std::max(c, pop_st.back()[2]);
+				x = f (x, pop_st.back().x);
 			}
-			pop_st.push_back({a, b, c});
+			pop_st.push_back({v, x});
 			push_st.pop_back();
 		}
 	}
 
 	public:
+
 	int size () {
 		return push_st.size() + pop_st.size();
 	}
@@ -24,13 +33,12 @@ class MinMaxQUEUE {
 		return size ();
 	}
 
-	void push (int a) {
-		int b = a, c = a;
+	void push (int v) {
+		int x = v;
 		if (!push_st.empty()) {
-			b = std::min(b, push_st.back()[1]);
-			c = std::max(c, push_st.back()[2]);
+			x = f (x, push_st.back().x);
 		}
-		push_st.push_back({a, b, c});
+		push_st.push_back({v, x});
 	}
 
 	void pop () {
@@ -38,35 +46,29 @@ class MinMaxQUEUE {
 		pop_st.pop_back();
 	}
 
-	int min () {
-		if (pop_st.empty()) return push_st.back()[1];
-		if (push_st.empty()) return pop_st.back()[1];
-		return std::min(push_st.back()[1], pop_st.back()[1]);
-	}
-
-	int max () {
-		if (pop_st.empty()) return push_st.back()[2];
-		if (push_st.empty()) return pop_st.back()[2];
-		return std::max(push_st.back()[2], pop_st.back()[2]);
+	int feature () {
+		if (pop_st.empty()) return push_st.back().x;
+		if (push_st.empty()) return pop_st.back().x;
+		return f (push_st.back().x, pop_st.back().x);
 	}
 
 	int front () {
 		if (pop_st.empty()) transfer();
-		return pop_st.back()[0];
+		return pop_st.back().v;
 	}
 
-	friend ostream & operator << (ostream &os, const MinMaxQUEUE &Q) {
+	friend ostream & operator << (ostream &os, const Mqueue &Q) {
 		int n = Q.pop_st.size();
-		for (int i = 0; i < n - 1; i++) os << Q.pop_st[i][0] << ' ';
+		for (int i = 0; i < n - 1; i++) os << Q.pop_st[i].v << ' ';
 		if (!Q.pop_st.empty()) {
-			cout << Q.pop_st.back()[0];
+			cout << Q.pop_st.back().v;
 			if (!Q.push_st.empty()) {
 				cout << ' ';
 			}
 		}
 		n = Q.push_st.size();
-		for (int i = n - 1; i > 0; i--) os << Q.push_st[i][0] << ' ';
-		if (!Q.push_st.empty()) cout << Q.push_st.front()[0];
+		for (int i = n - 1; i > 0; i--) os << Q.push_st[i].v << ' ';
+		if (!Q.push_st.empty()) cout << Q.push_st.front().v;
 		return os;
 	}
 };
