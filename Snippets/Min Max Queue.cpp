@@ -61,14 +61,14 @@ class Mqueue {
 		int n = Q.pop_st.size();
 		for (int i = 0; i < n - 1; i++) os << Q.pop_st[i].v << ' ';
 		if (!Q.pop_st.empty()) {
-			cout << Q.pop_st.back().v;
+			os << Q.pop_st.back().v;
 			if (!Q.push_st.empty()) {
-				cout << ' ';
+				os << ' ';
 			}
 		}
 		n = Q.push_st.size();
 		for (int i = n - 1; i > 0; i--) os << Q.push_st[i].v << ' ';
-		if (!Q.push_st.empty()) cout << Q.push_st.front().v;
+		if (!Q.push_st.empty()) os << Q.push_st.front().v;
 		return os;
 	}
 };
