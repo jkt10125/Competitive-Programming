@@ -11,7 +11,7 @@ class mint {
         return (v % M + M) % M;
     }
 
-    mint(int mod, long long v = 0) {
+    mint(int mod = 0, long long v = 0) {
         M = mod;
         x = norm(v);
     }
@@ -118,8 +118,3 @@ class mint {
         return os;
     }
 };
-
-int main() {
-    mint a(P, 2);
-    cout << a.inv();
-}
