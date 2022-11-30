@@ -8,7 +8,7 @@ class mint {
     public:
 
     int norm(long long v) {
-        return (v + M) % M;
+        return (v % M + M) % M;
     }
 
     mint(int mod, long long v = 0) {
@@ -16,7 +16,7 @@ class mint {
         x = norm(v);
     }
 
-    mint power(mint a, long long b) {
+    mint power(mint a, long long b) const {
         mint res(a.M, 1);
         while(b) {
             if(b & 1) res *= a;
@@ -27,7 +27,7 @@ class mint {
     }
 
     mint operator - () const {
-        return mint(M, norm(-x));
+        return mint(M, -x);
     }
 
     mint inv() const {
@@ -39,7 +39,7 @@ class mint {
     }
 
     mint &operator *= (const mint &rhs) {
-        x = (long long)x * rhs.x * M;
+        x = (long long)x * rhs.x % M;
         return *this;
     }
 
@@ -118,3 +118,8 @@ class mint {
         return os;
     }
 };
+
+int main() {
+    mint a(P, 2);
+    cout << a.inv();
+}
