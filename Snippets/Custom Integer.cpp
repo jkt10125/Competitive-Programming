@@ -3,92 +3,118 @@ using namespace std;
 
 constexpr int P = 998244353;
 
-int norm(int x) {
-    if (x < 0) { x += P; }
-    if (x >= P) { x -= P; }
-    return x;
-}
-
-template <class T>
-T power(T a, long long b) {
-    T res = 1;
-    for (; b; b /= 2, a *= a) {
-        if (b % 2) {
-            res *= a;
-        }
-    }
-    return res;
-}
-class cint {
-    int x;
+class mint {
+    int M, x;
     public:
-    cint(int x = 0) : x(norm(x)) {}
-    cint(long long x) : x(norm(x % P)) {}
+
+    int norm(long long v) {
+        return (v + M) % M;
+    }
+
+    mint(int mod, long long v = 0) {
+        M = mod;
+        x = norm(v);
+    }
+
+    mint power(mint a, long long b) {
+        mint res(a.M, 1);
+        while(b) {
+            if(b & 1) res *= a;
+            a *= a;
+            b >>= 1;
+        }
+        return res;
+    }
+
+    mint operator - () const {
+        return mint(M, norm(-x));
+    }
+
+    mint inv() const {
+        return power(*this, M - 2);
+    }
+
     int val() const {
         return x;
     }
 
-    cint operator-() const {
-        return cint(norm(P - x));
-    }
-
-    cint inv() const {
-        assert(x != 0);
-        return power(*this, P - 2);
-    }
-
-    cint &operator*=(const cint &rhs) {
-        x = (long long)x * rhs.x % P;
+    mint &operator *= (const mint &rhs) {
+        x = (long long)x * rhs.x * M;
         return *this;
     }
 
-    cint &operator+=(const cint &rhs) {
+    mint &operator += (const mint &rhs) {
         x = norm(x + rhs.x);
         return *this;
     }
 
-    cint &operator-=(const cint &rhs) {
+    mint &operator -= (const mint &rhs) {
         x = norm(x - rhs.x);
         return *this;
     }
 
-    cint &operator/=(const cint &rhs) {
+    mint &operator /= (const mint &rhs) {
         return *this *= rhs.inv();
     }
 
-    friend cint operator*(const cint &lhs, const cint &rhs) {
-        cint res = lhs;
+    mint operator * (const mint &rhs) {
+        mint res = *this;
         res *= rhs;
         return res;
     }
 
-    friend cint operator+(const cint &lhs, const cint &rhs) {
-        cint res = lhs;
-        res += rhs;
-        return res;
-    }
-
-    friend cint operator-(const cint &lhs, const cint &rhs) {
-        cint res = lhs;
-        res -= rhs;
-        return res;
-    }
-
-    friend cint operator/(const cint &lhs, const cint &rhs) {
-        cint res = lhs;
+    mint operator / (const mint &rhs) {
+        mint res = *this;
         res /= rhs;
         return res;
     }
 
-    friend std::istream &operator>>(std::istream &is, cint &a) {
-        long long v;
-        is >> v;
-        a = cint(v);
-        return is;
+    mint operator + (const mint &rhs) {
+        mint res = *this;
+        res += rhs;
+        return res;
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const cint &a) {
-        return os << a.val();
+    mint operator - (const mint &rhs) {
+        mint res = *this;
+        res -= rhs;
+        return res;
+    }
+
+    mint &operator += (const long long &rhs) {
+        return *this += mint(M, rhs);
+    }
+
+    mint &operator -= (const long long &rhs) {
+        return *this -= mint(M, rhs);
+    }
+
+    mint &operator *= (const long long &rhs) {
+        return *this *= mint(M, rhs);
+    }
+
+    mint &operator /= (const long long &rhs) {
+        return *this /= mint(M, rhs);
+    }
+
+    mint operator + (const long long &rhs) {
+        return *this + mint(M, rhs);
+    }
+
+    mint operator - (const long long &rhs) {
+        return *this - mint(M, rhs);
+    }
+
+    mint operator * (const long long &rhs) {
+        return *this * mint(M, rhs);
+    }
+
+    mint operator / (const long long &rhs) {
+        return *this / mint(M, rhs);
+    }
+
+    friend ostream &operator << (ostream &os, const mint &rhs) {
+        os << rhs.val();
+        return os;
     }
 };
-
