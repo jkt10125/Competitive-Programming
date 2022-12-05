@@ -113,6 +113,15 @@ class mint {
         return *this / mint(M, rhs);
     }
 
+    bool operator == (const mint &rhs) const {
+        return x == rhs.x;
+    }
+
+    mint operator = (const long long &rhs) {
+        x = norm(rhs);
+        return *this;
+    }
+
     friend ostream &operator << (ostream &os, const mint &rhs) {
         os << rhs.val();
         return os;
