@@ -7,19 +7,23 @@ class mint {
     int M, x;
     public:
 
-    int norm(long long v) {
+    int norm (long long v) {
         return (v % M + M) % M;
     }
 
-    mint(int mod = 0, long long v = 0) {
+    mint (int mod, long long v = 0) {
         M = mod;
         x = norm(v);
     }
 
-    mint power(mint a, long long b) const {
-        mint res(a.M, 1);
-        while(b) {
-            if(b & 1) res *= a;
+    mint () {
+        M = x = 0;
+    }
+
+    mint power (mint a, long long b) const {
+        mint res (a.M, 1);
+        while (b) {
+            if (b & 1) res *= a;
             a *= a;
             b >>= 1;
         }
@@ -30,11 +34,11 @@ class mint {
         return mint(M, -x);
     }
 
-    mint inv() const {
-        return power(*this, M - 2);
+    mint inv () const {
+        return power (*this, M - 2);
     }
 
-    int val() const {
+    int val () const {
         return x;
     }
 
@@ -44,12 +48,12 @@ class mint {
     }
 
     mint &operator += (const mint &rhs) {
-        x = norm(x + rhs.x);
+        x = norm (x + rhs.x);
         return *this;
     }
 
     mint &operator -= (const mint &rhs) {
-        x = norm(x - rhs.x);
+        x = norm (x - rhs.x);
         return *this;
     }
 
@@ -127,3 +131,8 @@ class mint {
         return os;
     }
 };
+
+// int main() {
+//     mint a(23, 6), b(13, 6);
+//     if(a == b) cout << " YES";
+// }
