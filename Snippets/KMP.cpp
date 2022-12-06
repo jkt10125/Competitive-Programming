@@ -60,6 +60,7 @@ vector<int> prefixSubstringOccurence (string &w, string &s) {
 }
 
 // O(26n)
+// NOTE :: 0-based indexing is followed in the DFA
 vector<vector<int>> automationFunction (string &s) {
     s.push_back('$');
     int n = s.size();
@@ -91,7 +92,11 @@ int compressionLength (string &s) {
 
 int main() {
     string s, t;
-    cin >> s >> t;
-    for (int i : prefixFunction(s)) cout << i << ' ';
-    // for (int i : prefixSubstringOccurence(t, s)) cerr << i << ' '; 
+    cin >> s;
+    auto A = automationFunction(s);
+    for (int i = 0; i <= s.size(); i++) {
+        cout << A[i][0] << ' ';
+        cout << A[i][1] << ' ';
+        cout << A[i][2] << '\n';
+    }
 }
