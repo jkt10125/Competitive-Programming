@@ -90,17 +90,6 @@ int compressionLength (string &s) {
 int main() {
     string s, t;
     cin >> s >> t;
-    auto A = automationFunction(s);
-
-    for (int i = 0; i <= s.size(); i++) {
-        cout << A[i][0] << ' ';
-        cout << A[i][1] << ' ';
-        cout << A[i][2] << '\n';
-    }
-    int ctr = 0;
-    for (char c : t) {
-        ctr = A[ctr][c - 'a'];
-        cout << ctr << ' ';
-    }
+    for (int i : prefixFunction(s)) cout << i << ' ';
     // for (int i : prefixSubstringOccurence(t, s)) cerr << i << ' '; 
 }
