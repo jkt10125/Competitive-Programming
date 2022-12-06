@@ -16,14 +16,16 @@ vector<int> prefixFunction (string &s) {
     return pi;
 }
 
-int substringSearch (string &w, string &s) {
+vector<int> substringSearch (string &w, string &s) {
     string res = w + "$" + s;
     vector<int> pi = prefixFunction(res);
-    int ctr = 0;
+    vector<int> match;
     for (int i = w.size() + 1; i < res.size(); i++) {
-        if (pi[i] == w.size()) ctr++;
+        if (pi[i] == w.size()) {
+            match.push_back(i - (pi[i] << 1));
+        }
     }
-    return ctr;
+    return match;
 }
 
 vector<int> prefixSubstringOccurence (string &s) {
