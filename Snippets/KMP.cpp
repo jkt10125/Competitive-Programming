@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-vector<int> KMP (string &s) {
+vector<int> prefixFunction (string &s) {
     int n = s.size();
     vector<int> pi(n);
     for (int i = 1; i < n; i++) {
@@ -16,8 +16,91 @@ vector<int> KMP (string &s) {
     return pi;
 }
 
+int substringSearch (string &w, string &s) {
+    string res = w + "$" + s;
+    vector<int> pi = prefixFunction(res);
+    int ctr = 0;
+    for (int i = w.size() + 1; i < res.size(); i++) {
+        if (pi[i] == w.size()) ctr++;
+    }
+    return ctr;
+}
+
+vector<int> prefixSubstringOccurence (string &s) {
+    int n = s.size();
+    vector<int> ans(n + 1);
+    vector<int> pi = prefixFunction(s);
+    
+    for (int i = 0; i < n; i++) {
+        ans[pi[i]]++;
+    }
+    
+    for (int i = n; i > 0; i--) {
+        ans[pi[i-1]] += ans[i];
+    }
+    
+    for (int i = 0; i <= n; i++) {
+        ans[i]++;
+    }
+
+    return vector<int> (&ans[1], &ans[n + 1]);
+}
+
+vector<int> prefixSubstringOccurence (string &w, string &s) {
+    string str = w + "$" + s;
+    vector<int> pi1 = prefixSubstringOccurence(str);
+    vector<int> pi2 = prefixSubstringOccurence(w);
+    vector<int> res(w.size());
+    for (int i = 0; i < (int)res.size(); i++) {
+        res[i] = pi1[i] - pi2[i];
+    }
+    return res;
+}
+
+// O(26n)
+vector<vector<int>> automationFunction (string &s) {
+    s.push_back('$');
+    int n = s.size();
+    vector<int> pi = prefixFunction(s);
+    vector<vector<int>> A(n, vector<int> (26));
+    for (int i = 0; i < n; i++) {
+        for (int c = 0; c < 26; c++) {
+            if (i > 0 && 'a' + c != s[i]) {
+                A[i][c] = A[pi[i-1]][c];
+            }
+            else {
+                A[i][c] = i + ('a' + c == s[i]);
+            }
+        }
+    }
+    s.pop_back();
+    return A;
+}
+
+// smallest string a whose several times concatenation produces s
+// |a| = compression Length
+int compressionLength (string &s) {
+    int n = s.size();
+    vector<int> pi = prefixFunction(s);
+    int k = n - pi[n - 1];
+    if (n % k) return n;
+    else return k;
+}
+
 int main() {
-    string s;
-    cin >> s;
-    for (int i : KMP(s)) cout << i << ' ';
+    string s, t;
+    cin >> s >> t;
+    auto A = automationFunction(s);
+
+    for (int i = 0; i <= s.size(); i++) {
+        cout << A[i][0] << ' ';
+        cout << A[i][1] << ' ';
+        cout << A[i][2] << '\n';
+    }
+    int ctr = 0;
+    for (char c : t) {
+        ctr = A[ctr][c - 'a'];
+        cout << ctr << ' ';
+    }
+    // for (int i : prefixSubstringOccurence(t, s)) cerr << i << ' '; 
 }
