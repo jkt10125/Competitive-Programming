@@ -45,7 +45,8 @@ vector<int> prefixSubstringOccurence (string &s) {
         ans[i]++;
     }
 
-    return vector<int> (&ans[1], &ans[n + 1]);
+    ans.erase(ans.begin());
+    return ans;
 }
 
 vector<int> prefixSubstringOccurence (string &w, string &s) {
@@ -86,8 +87,7 @@ int compressionLength (string &s) {
     int n = s.size();
     vector<int> pi = prefixFunction(s);
     int k = n - pi[n - 1];
-    if (n % k) return n;
-    else return k;
+    return (n % k) ? n : k;
 }
 
 // The number of different substring in a string :: O(n * n)
