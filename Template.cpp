@@ -1,7 +1,5 @@
 #include <bits/stdc++.h>
 using namespace std;
-// https://unix.stackexchange.com/questions/87011/how-to-easily-build-your-own-linux-distro
-// https://github.com/Sephiroth-XIII/edex-ui-conky/blob/master/install.sh
 // #define int long long
 
 #define FOR(i, a, b, c) for(int i=(int)a; i<=(int)b; i+=(int)c)
