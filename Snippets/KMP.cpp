@@ -69,7 +69,7 @@ vector<vector<int>> automationFunction (string &s) {
     for (int i = 0; i < n; i++) {
         for (int c = 0; c < 26; c++) {
             if (i > 0 && 'a' + c != s[i]) {
-                A[i][c] = A[pi[i-1]][c];
+                A[i][c] = A[pi[i - 1]][c];
             }
             else {
                 A[i][c] = i + ('a' + c == s[i]);
@@ -89,6 +89,9 @@ int compressionLength (string &s) {
     if (n % k) return n;
     else return k;
 }
+
+// The number of different substring in a string :: O(n * n)
+// ==> use suffix array method instead :: O(n logn)
 
 int main() {
     string s, t;
