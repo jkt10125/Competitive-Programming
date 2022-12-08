@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// O(n)
 vector<int> zFunction (string &s) {
     int n = s.size();
     vector<int> z(n);
@@ -20,6 +21,7 @@ vector<int> zFunction (string &s) {
     return z;
 }
 
+// O(n)
 vector<int> substringSearch (string &w, string &s) {
     string res = w + "$" + s;
     vector<int> z = zFunction(res);

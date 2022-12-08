@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// O(n)
 vector<int> prefixFunction (string &s) {
     int n = s.size();
     vector<int> pi(n);
@@ -16,6 +17,7 @@ vector<int> prefixFunction (string &s) {
     return pi;
 }
 
+// O(n)
 vector<int> substringSearch (string &w, string &s) {
     string res = w + "$" + s;
     vector<int> pi = prefixFunction(res);
@@ -28,6 +30,7 @@ vector<int> substringSearch (string &w, string &s) {
     return match;
 }
 
+// O(n)
 vector<int> prefixSubstringOccurence (string &s) {
     int n = s.size();
     vector<int> ans(n + 1);
@@ -49,6 +52,7 @@ vector<int> prefixSubstringOccurence (string &s) {
     return ans;
 }
 
+// O(n)
 vector<int> prefixSubstringOccurence (string &w, string &s) {
     string str = w + "$" + s;
     vector<int> pi1 = prefixSubstringOccurence(str);
