@@ -52,3 +52,9 @@ int compressionLength (string &s) {
     }
     return len;
 }
+
+int main() {
+    string s, t;
+    cin >> s >> t;
+    for (int i : substringSearch(t, s)) cout << i << ' ';
+}
