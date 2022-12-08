@@ -47,3 +47,11 @@ vector<int> suffix_array(string &s) {
     p.erase(p.begin());
     return p;
 }
+
+int main() {
+    string s;
+    cin >> s;
+    for (int i : suffix_array(s)) {
+        cout << i << '\n';
+    }
+}
