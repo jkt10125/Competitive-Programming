@@ -36,18 +36,42 @@ vector<int> suffixArray (string &s) {
         }
         k++;
     }
-
-    k = 0;
-    vector<int> lcp(n - 1);
-    for(int i = 0; i < n - 1; i++) {
-        int pi = eq_class[i];
-        int j = p[pi - 1];
-        while (s[i + k] == s[p[eq_class[i] - 1] + k]) k++;
-        lcp[eq_class[i]] = k;
-        k = max(k - 1, 0);
-    }
     
     s.pop_back();
     p.erase(p.begin());
     return p;
+}
+
+vector<int> LCP (string &s, vector<int> &p) {
+    int n = s.size();
+    vector<int> rank(n, 0);
+    for (int i = 0; i < n; i++) {
+        rank[p[i]] = i;
+    }
+
+    int k = 0;
+    vector<int> lcp(n - 1, 0);
+    for (int i = 0; i < n; i++) {
+        if (rank[i] == n - 1) {
+            k = 0;
+            continue;
+        }
+        const int j = p[rank[i] + 1];
+        while (i + k < n && j + k < n) {
+            if (s[i + k] != s[j + k]) break;
+            k++;
+        }
+        lcp[rank[i]] = k;
+        if (k) k--;
+    }
+    return lcp;
+}
+
+int main() {
+    string s;
+    cin >> s;
+    auto sa = suffixArray(s);
+    for (int i : sa) cout << i << ' ';
+    cout << endl;
+    for (int i : LCP(s, sa)) cerr << i << ' ';
 }
