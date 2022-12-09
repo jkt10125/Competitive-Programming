@@ -42,6 +42,43 @@ vector<int> suffixArray (string &s) {
     return p;
 }
 
+int substringSearch (string &w, string &s, vector<int> &p) {
+    int n = s.size();
+    int match;
+    int d, u, l, r;
+    l = 0, r = n - 1;
+    d = n;
+
+    while (l <= r) {
+        int m = ((l + r) >> 1);
+        string str = s.substr(p[m], w.size());
+        if (str < w) {
+            l = m + 1;
+        }
+        else {
+            if (str == w) d = m;
+            r = m - 1;
+        }
+    }
+
+    l = 0, r = n - 1;
+    u = d - 1;
+
+    while (l <= r) {
+        int m = ((l + r) >> 1);
+        string str = s.substr(p[m], w.size());
+        if (str > w) {
+            r = m - 1;
+        }
+        else {
+            if (str == w) u = m;
+            l = m + 1;
+        }
+    }
+
+    return u - d + 1;
+}
+
 vector<int> LCP (string &s, vector<int> &p) {
     int n = s.size();
     vector<int> rank(n, 0);
@@ -70,8 +107,11 @@ vector<int> LCP (string &s, vector<int> &p) {
 int main() {
     string s;
     cin >> s;
+    // s.push_back('@');
     auto sa = suffixArray(s);
-    for (int i : sa) cout << i << ' ';
-    cout << endl;
-    for (int i : LCP(s, sa)) cerr << i << ' ';
+    // for (int i : sa) cout << i << ' ';
+    string t;
+    cin >> t;
+    cout << substringSearch(t, s, sa);
+
 }
