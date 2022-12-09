@@ -76,6 +76,8 @@ int substringSearch (string &w, string &s, vector<int> &p) {
         }
     }
 
+    // index of all the matches is p[i] where i @[d, u]
+
     return u - d + 1;
 }
 
@@ -104,14 +106,25 @@ vector<int> LCP (string &s, vector<int> &p) {
     return lcp;
 }
 
+// O(n logn)
+// NOTE :: Empty substring is not counted here!
+int countDistinctSubstring (string &s) {
+    int n = s.size();
+    vector<int> p = suffixArray(s);
+    vector<int> lcp = LCP(s, p);
+    int sum = accumulate(lcp.begin(), lcp.end(), 0ll);
+    return n * (n + 1) / 2 - sum;
+}
+
 int main() {
     string s;
     cin >> s;
     // s.push_back('@');
-    auto sa = suffixArray(s);
+    // auto sa = suffixArray(s);
     // for (int i : sa) cout << i << ' ';
-    string t;
-    cin >> t;
-    cout << substringSearch(t, s, sa);
+    // string t;
+    // cin >> t;
+    // cout << substringSearch(t, s, sa);
+    cout << countDistinctSubstring(s);
 
 }
