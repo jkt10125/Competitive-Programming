@@ -1,35 +1,20 @@
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
 using namespace std;
+template <typename T = int>
+using ordered_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+#define int long long
+signed main() {
+    ordered_set<int> s;
+    s.insert(1);
+    s.insert(2);
+    s.insert(3);
+    s.insert(4);
+    s.insert(7);
+    s.insert(8);
 
-std::vector<std::array<int, 2>> divisors(int n) {
-    std::vector<int> p;
-    for (int i = 2; i * i <= n; i++) {
-        if (n % i == 0) {
-            p.push_back(i);
-            while (n % i == 0) {
-                n /= i;
-            }
-        }
-    }
-    if (n > 1) {
-        p.push_back(n);
-    }
-    
-    n = p.size();
-    std::vector<std::array<int, 2>> a(1 << n);
-    a[0] = {1, 1};
-    for (int i = 1; i < (1 << n); i++) {
-        int j = __builtin_ctz(i);
-        auto [x, y] = a[i ^ (1 << j)];
-        a[i] = {x * p[j], -y};
-    }
-    return a;
-}
-
-int main() {
-    auto d = divisors(420 * 11);
-    for(auto it : d) {
-        for(auto i : it) cout << i << ' ';
-        cout << endl;
-    }
+    cout << *s.find_by_order(4);
+    // cout << order
 }
