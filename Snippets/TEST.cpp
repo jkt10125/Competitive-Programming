@@ -13,6 +13,73 @@ struct Vertex {
     }
 };
 
+class Trie {
+    vector<Vertex> trie;
+    public:
+    Trie () {
+        trie.emplace_back(Vertex(0, '$'));
+    }
+
+    void addString (string &s) {
+        int v = 0;
+        for (char ch : s) {
+            int c = ch - 'a';
+            if (trie[v].next[c] == -1) {
+                trie[v].next[c] = trie.size();
+                trie.emplace_back (Vertex(v, ch));
+            }
+            v = trie[v].next[c];
+        }
+        trie[v].leaf = true;
+    }
+
+    void updateLinks () {
+        int n = trie.size();
+        for (int i = 1; i < n; i++) {
+            int u = trie[i].par;
+            int c = trie[i].ch - 'a';
+            if (u == 0) {
+                trie[i].link = 0;
+            }
+            else {
+                u = trie[u].link;
+                while (trie[u].next[c] == -1 && u) {
+                    u = trie[u].link;
+                }
+                trie[i].link = trie[u].next[c];
+                if (trie[i].link == -1) {
+                    trie[i].link = 0;
+                }
+            }
+            u = trie[i].link;
+            trie[i].out = (trie[u].leaf) ? u : trie[u].out;
+        }    
+    }
+
+    int countMatches (string &t) {
+        int v = 0;
+        int ctr = 0;
+        for (char ch : t) {
+            int c = ch - 'a';
+            if (trie[v].next[c] != -1) {
+                v = trie[v].next[c];
+            }
+            else {
+                if (trie[v].link) {
+                    v = trie[v].link;
+                }
+            }
+            if (trie[v].leaf) ctr++;
+            int u = v;
+            while (trie[u].out != -1) {
+                ctr++;
+                u = trie[u].out;
+            }
+        }
+        return ctr;
+    }
+};
+
 vector<Vertex> trie(1, Vertex (0, '$'));
 
 void addString (string &s) {
@@ -82,19 +149,34 @@ int getOutLink (int v) {
 }
 
 int countMatches (string &s) {
-    int ctr = 0;
+    set<int> mm;
     int v = 0;
+    int ctr = 0;
     for (char ch : s) {
         int c = ch - 'a';
-        if (trie[v].next[c] == -1) {
-            while (trie[v].next[c] == -1 && v) {
-                v = getLink (v);
-                if (trie[v].leaf) ctr++;
-            }
-            if (!v) continue;
+        if (trie[v].next[c] != -1) {
+            v = trie[v].next[c];
         }
-        v = trie[v].next[c];
-        if (trie[v].leaf) ctr++;
+        else if (!v) continue; 
+        else {
+            if (trie[v].link) {
+                v = trie[v].link;
+            }
+        }
+        if (trie[v].leaf) {
+            if (mm.find(v) == mm.end()) {
+                ctr++;
+                mm.insert(v);
+            }
+        }
+        int u = v;
+        while (trie[u].out != -1) {
+            if (mm.find(v) == mm.end()) {
+                ctr++;
+                mm.insert(v);
+            }
+            u = trie[u].out;
+        }
     }
     return ctr;
 }
@@ -115,18 +197,18 @@ int main() {
     addString(s);
     cin >> s;
     addString(s);
-    cin >> s;
-    addString(s);
-    cin >> s;
-    addString(s);
+    // cin >> s;
+    // addString(s);
+    // cin >> s;
+    // addString(s);
     for(int i = 0; i < trie.size() ; i++) {
         // getLink(i);
-        getOutLink(i);
-        // calcLink();
+        // getOutLink(i);
+        calcLink();
     }
     // getLink(trie.size()-1);
-    // cin >> t;
-    // cout << countMatches(t);
+    cin >> t;
+    cerr << countMatches(t);
     print();
     // cerr << trie[5].par << ' ' << trie[9].link;
     // cerr << trie[9].ch;
