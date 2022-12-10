@@ -1,72 +1,70 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int ALPHABET_SIZE = 26;
+const int K = 26;
 
-class Trie {
-	Trie *child[ALPHABET_SIZE];
-	int terminating_number;
-	public:
-	Trie() {
-		for(int i=0; i<ALPHABET_SIZE; i++) {
-			child[i] = nullptr;
-		}
-		terminating_number = 0;
-	}
-	
-	bool empty() {
-		for(int i=0; i<ALPHABET_SIZE; i++) {
-			if(child[i] != nullptr) return false;
-		}
-		return true;
-	}
+struct Vertex {
+	int next[K], go[K];
+	int p, link;
+	char pch;
+	bool leaf;
 
-	void insert(string key) {
-		Trie *A = this;
-		for(char c : key) {
-			int idx = c - 'a';
-			if(A->child[idx] == nullptr) {
-				A->child[idx] = new Trie;
-			}
-			A = A->child[idx];
-		}
-		A->terminating_number++;
-	}
-
-	void del(string key, int depth=0) {
-		Trie *A = this;
-		if(depth == key.size()) {
-			if(A->terminating_number) A->terminating_number--;
-			if(A->empty()) {
-				delete A;
-				A = nullptr;
-			}
-		}
-		int idx = key[depth] - 'a';
-		A->child[idx]->del(key, depth+1);
-		if(A->empty() && !A->terminating_number) {
-			delete A;
-			A = nullptr;
-		}
-	}
-
-	bool search(string key) {
-		Trie *A = this;
-		for(char c : key) {
-			int idx = c - 'a';
-			if(A->child[idx] == nullptr) return false;
-			A = A->child[idx];
-		}
-		if(A->terminating_number) return true;
-		return false;
+	Vertex (int p = -1, char ch = '$') : p(p), pch(ch) {
+		fill (go, go + K, -1);
+		fill (next, next + K, -1);
+		leaf = false;
+		link = -1;
 	}
 };
 
-int main() {
-	vector<string> A = {"hi", "hello", "jkt", "jay", "kumar", "thakur"};
-	Trie T;
-	for(string s : A) T.insert(s);
-	if(T.search("ja")) cout<<"YES";
-	else cout<<"No";
-	return 0;
-}
+class Trie {
+	vector<Vertex> trie;
+	public:
+	Trie() {
+		trie.resize(1);
+	}
+
+	void addString (string &s) {
+		int v = 0;
+		for (char c : s) {
+			int i = c - 'a';
+			if (trie[v].next[i] == -1) {
+				trie[v].next[i] = trie.size();
+				trie.emplace_back(v, c);
+			}
+			v = trie[v].next[i];
+		}
+		trie[v].leaf = true;
+	}
+
+	int getLink (int v) {
+		if (trie[v].link == -1) {
+			if (v == 0 || trie[v].p == 0) {
+				trie[v].link = 0;
+			}
+			else {
+				trie[v].link = go(getLink(trie[v].p), trie[v].pch);
+			}
+		}
+		return trie[v].link;
+	}
+
+	int go (int v, char ch) {
+		int i = ch - 'a';
+		if (trie[v].go[i] == -1) {
+			if (trie[v].next[i] != -1) {
+				trie[v].go[i] = trie[v].next[i];
+			}
+			else {
+				trie[v].go[i] = (v == 0) ? 0 : go (getLink (v), ch);
+			}
+		}
+		return trie[v].go[i];
+	}
+
+	int countOccurence (string &s) {
+		int v = 0;
+		
+	}
+};
+
