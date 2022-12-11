@@ -38,7 +38,9 @@ vector<point> convexHull(vector<point> &A) {
         }
     }
     sort(A.begin(), A.end(), cmp);
-
+    for (point p : A) {
+        cerr << p.x << ' ' << p.y << endl;
+    }
     vector<point> ST = {A[0], A[1]};
     for(int i=2; i<n; i++) {
         point p0, p1, p2 = A[i];
@@ -46,7 +48,6 @@ vector<point> convexHull(vector<point> &A) {
             p0 = ST[ST.size()-2]; p1 = ST[ST.size()-1];
             if (p0.cross(p1, p2) <= 0) {
                 // change the camparison above to < if you want to keep all points on periferi
-                //  NOTE : points on perimeter line lying parallel to y axis needs to be checked!!!
                 ST.pop_back();
             }
             else break;

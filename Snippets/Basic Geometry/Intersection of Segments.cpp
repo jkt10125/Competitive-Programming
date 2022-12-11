@@ -34,17 +34,40 @@ bool checkIntersection (const point &a, const point &b, const point &c, const po
 }
 
 int doubleTheAreaOfTriangle (point &p1, point &p2, point &p3) {
-    return abs (p2.cross (p1, p3));
+    return abs (p1.cross (p2, p3));
+}
+
+point p0;
+
+bool cmp(point p1, point p2) {
+    int v = p0.cross (p1, p2);
+    return (!v) ? (p1.y < p2.y) : (v > 0);
 }
 
 int doubleTheAreaOfPolygon (vector<point> &p) {
     int n = p.size();
-    point p0 = p[0];
+    int area = 0;
+    p0 = p[0];
     for (int i = 0; i < n; i++) {
-        if (p[i].x < p0.x) {
+        if (p[i].y < p0.y) {
             p0 = p[i];
         }
     }
     sort (p.begin(), p.end(), cmp);
+
+    for (int i = 1; i < n - 1; i++) {
+        area += doubleTheAreaOfTriangle (p0, p[i], p[i + 1]);
+    }
     return area;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<point> A(n);
+    for (int i = 0; i < n; i++) {
+        cin >> A[i].x >> A[i].y;
+    }
+
+    cout << doubleTheAreaOfPolygon(A);
 }
