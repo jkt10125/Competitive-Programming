@@ -10,13 +10,13 @@ int lengthOfUnion (vector<array<int, 2>> &A) {
     }
 
     sort(v.begin(), v.end());
-    int ans = 0, ctr = 1 - 2 * v[0][1];
+    int ans = 0, ctr = 1 - (v[0][1] << 1);
     
     for (int i = 1; i < (n << 1); i++) {
         if (ctr) {
             ans += v[i][0] - v[i-1][0];
         }
-        ctr += 1 - 2 * v[i][1];
+        ctr += 1 - (v[i][1] << 1);
     }
     return ans;
 }
@@ -29,5 +29,4 @@ int main() {
         cin >> A[i][0] >> A[i][1];
     }
     cout << lengthOfUnion(A);
-
 }
