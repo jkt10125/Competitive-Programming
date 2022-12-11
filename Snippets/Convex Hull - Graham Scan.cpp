@@ -1,19 +1,34 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class point {
-    public:
+// class point {
+//     public:
+//     int x, y;
+// };
+
+struct point {
     int x, y;
+    point () { }
+    point (int _x, int _y) : x(_x), y(_y) {}
+    point operator - (const point &P) const {
+        return point(x - P.x, y - P.y);
+    }
+    int cross (const point &P) const {
+        return (x * P.y - y * P.x);
+    }
+    int cross (const point &P, const point &Q) const {
+        return (P - *this).cross (Q - *this);
+    }
 };
 
 point p0;
 
 bool cmp(point p1, point p2) {
-    int v = (p1.y - p0.y) * (p2.x - p0.x) - (p1.x - p0.x) * (p2.y - p0.y);
-    return (v == 0) ? (p1.y < p2.y) : (v < 0);
+    int v = p0.cross (p1, p2);
+    return (!v) ? (p1.y < p2.y) : (v > 0);
 }
 
-vector<point> convex_hull(vector<point> &A) {
+vector<point> convexHull(vector<point> &A) {
     p0 = A[0];
     int n = A.size();
     for(int i=1; i<n; i++) {
@@ -29,8 +44,9 @@ vector<point> convex_hull(vector<point> &A) {
         point p0, p1, p2 = A[i];
         while(ST.size() > 1) {
             p0 = ST[ST.size()-2]; p1 = ST[ST.size()-1];
-            if((p1.y - p0.y) * (p2.x - p0.x) >= (p1.x - p0.x) * (p2.y - p0.y)) {
-                // change the camparison above to > if you want to keep all points on periferi
+            if (p0.cross(p1, p2) <= 0) {
+                // change the camparison above to < if you want to keep all points on periferi
+                //  NOTE : points on perimeter line lying parallel to y axis needs to be checked!!!
                 ST.pop_back();
             }
             else break;
@@ -38,4 +54,16 @@ vector<point> convex_hull(vector<point> &A) {
         ST.push_back(p2);
     }
     return ST;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<point> A(n);
+    for (int i = 0; i < n; i++) {
+        cin >> A[i].x >> A[i].y;
+    }
+    for (point p : convexHull(A)) {
+        cout << p.x << ' ' << p.y << endl;
+    }
 }

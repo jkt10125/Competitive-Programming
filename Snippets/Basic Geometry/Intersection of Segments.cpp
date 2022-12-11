@@ -32,3 +32,19 @@ bool checkIntersection (const point &a, const point &b, const point &c, const po
     }
     return sgn (a.cross(b, c)) != sgn (a.cross(b, d)) && sgn (b.cross(a, c)) != sgn (b.cross(a, d));
 }
+
+int doubleTheAreaOfTriangle (point &p1, point &p2, point &p3) {
+    return abs (p2.cross (p1, p3));
+}
+
+int doubleTheAreaOfPolygon (vector<point> &p) {
+    int n = p.size();
+    point p0 = p[0];
+    for (int i = 0; i < n; i++) {
+        if (p[i].x < p0.x) {
+            p0 = p[i];
+        }
+    }
+    sort (p.begin(), p.end(), cmp);
+    return area;
+}
