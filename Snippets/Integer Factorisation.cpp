@@ -1,38 +1,50 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int N = 2e5 + 7;
+const int N = 2e7;
 vector<int> prime; 
-// do_once() : sieve(N)
+int min_prime_factor[N + 1];
+// do_once() : sieve()
 
-void sieve (int n) {
-	vector<int> min_prime_factor (n + 1, 0);
-	for (int i = 2; i <= n; i++) {
+void sieve () {
+	for (int i = 2; i <= N; i++) {
 		if (min_prime_factor[i] == 0) { 
 			min_prime_factor[i] = i;
 			prime.push_back(i); 
 		}
 		for (int p : prime) {
-			if(p > min_prime_factor[i] || i * p > n) break;
+			if(p > min_prime_factor[i] || i * p > N) break;
 			min_prime_factor[i * p] = p;
 		}
 	}
 }
 
+
 vector<array<int, 2>> factor (int n) {
     vector<array<int, 2>> p;
-    for (int i : prime) {
-        if (i * i > n) break;
-        if (n % i == 0) {
-            p.push_back({i, 0});
-            while (n % i == 0) {
-                n /= i;
-                p.back()[1]++;
+    if (n > N) { // O(sqrt(n / log n))
+        for (int i : prime) {
+            if (i * i > n) break;
+            if (n % i == 0) {
+                p.push_back({i, 0});
+                while (n % i == 0) {
+                    n /= i;
+                    p.back()[1]++;
+                }
             }
         }
+        if (n > 1) {
+            p.push_back({n, 1});
+        }
     }
-    if (n > 1) {
-        p.push_back({n, 1});
+    else { // O(log n)
+        while (n > 1) {
+            if (p.empty() || p.back()[0] != min_prime_factor[n]) {
+                p.push_back({min_prime_factor[n], 0});
+            }
+            n /= min_prime_factor[n];
+            p.back()[1]++;
+        }
     }
 
     return p;
@@ -41,6 +53,7 @@ vector<array<int, 2>> factor (int n) {
 //NOTE: If the function is called less number of times then directly use the 
 //  sqrt n method else calculate the primes first and then iterate over primes only!
 
+// O(sqrt(n))
 vector<array<int, 2>> factor (int n) {
     vector<array<int, 2>> p;
     for(int i = 2; i * i <= n; i++) {

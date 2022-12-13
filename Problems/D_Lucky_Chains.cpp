@@ -1,9 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int N = 1e7;
+const int N = 2e7;
 vector<int> prime; 
 int min_prime_factor[N + 1];
+// do_once() : sieve()
 
 void sieve () {
 	for (int i = 2; i <= N; i++) {
@@ -18,15 +19,35 @@ void sieve () {
 	}
 }
 
-vector<int> get_factors (int n) {
-    vector<int> A;
-    while (n > 1) {
-        if (A.empty() || A.back() != min_prime_factor[n]) {
-            A.push_back(min_prime_factor[n]);
+
+vector<array<int, 2>> factor (int n) {
+    vector<array<int, 2>> p;
+    if (n > N) { // O(sqrt(n / log n))
+        for (int i : prime) {
+            if (i * i > n) break;
+            if (n % i == 0) {
+                p.push_back({i, 0});
+                while (n % i == 0) {
+                    n /= i;
+                    p.back()[1]++;
+                }
+            }
         }
-        n /= min_prime_factor[n];
+        if (n > 1) {
+            p.push_back({n, 1});
+        }
     }
-    return A;
+    else { // O(log n)
+        while (n > 1) {
+            if (p.empty() || p.back()[0] != min_prime_factor[n]) {
+                p.push_back({min_prime_factor[n], 0});
+            }
+            n /= min_prime_factor[n];
+            p.back()[1]++;
+        }
+    }
+
+    return p;
 }
 
 int main() {
@@ -48,9 +69,9 @@ int main() {
                 ans = -1;
             }
             else {
-                vector<int> A = get_factors(diff);
+                auto A = factor(diff);
                 ans = INT_MAX;
-                for (int i : A) {
+                for (auto [i, j] : A) {
                     ans = min (ans, i - a % i);
                 }    
             }
