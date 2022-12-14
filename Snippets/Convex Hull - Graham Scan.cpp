@@ -17,22 +17,17 @@ struct point {
 };
 
 vector<point> convexHull(vector<point> &A) {
-    point p0 = A[0];
-    int idx = 0;
+    size_t idx = 0;
     int n = A.size();
-    for(int i = 1; i < n; i++) {
-        if (A[i].y < p0.y) {
+    
+    for (size_t i = 1; i < n; i++) {
+        if (A[i].y < A[idx].y || (A[i].y == A[idx].y && A[i].x < A[idx].x)) {
             idx = i;
-            p0 = A[idx];
-        }
-        else if (A[i].y == p0.y) {
-            if (A[i].x < p0.x) {
-                idx = i;
-                p0 = A[idx];
-            }
         }
     }
     swap(A[0], A[idx]);
+    point p0 = A[0];
+
     sort (A.begin() + 1, A.end(), [&p0] (const point &p1, const point &p2) {
         int v = p0.cross (p1, p2);
         return ((!v) ? ((p1.x < p2.x) || (p1.y < p2.y)) : (v > 0));
