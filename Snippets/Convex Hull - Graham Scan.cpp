@@ -1,11 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// class point {
-//     public:
-//     int x, y;
-// };
-
 struct point {
     int x, y;
     point () { }
@@ -21,39 +16,55 @@ struct point {
     }
 };
 
-point p0;
-
-bool cmp(point p1, point p2) {
-    int v = p0.cross (p1, p2);
-    return (!v) ? (p1.y < p2.y) : (v > 0);
-}
-
 vector<point> convexHull(vector<point> &A) {
-    p0 = A[0];
+    point p0 = A[0];
+    int idx = 0;
     int n = A.size();
-    for(int i=1; i<n; i++) {
-        if(A[i].y < p0.y) p0 = A[i];
-        else if(A[i].y == p0.y) {
-            p0.x = min(p0.x, A[i].x);
+    for(int i = 1; i < n; i++) {
+        if (A[i].y < p0.y) {
+            idx = i;
+            p0 = A[idx];
+        }
+        else if (A[i].y == p0.y) {
+            if (A[i].x < p0.x) {
+                idx = i;
+                p0 = A[idx];
+            }
         }
     }
-    sort(A.begin(), A.end(), cmp);
-    for (point p : A) {
-        cerr << p.x << ' ' << p.y << endl;
+    swap(A[0], A[idx]);
+    sort (A.begin() + 1, A.end(), [&p0] (const point &p1, const point &p2) {
+        int v = p0.cross (p1, p2);
+        return ((!v) ? ((p1.x < p2.x) || (p1.y < p2.y)) : (v > 0));
+    });
+
+    idx = n - 1;
+    while (!p0.cross (A[idx], A[idx - 1])) {
+        if (idx == 1) break;
+        idx--;
     }
+    reverse (A.begin() + idx, A.end());
+    A.push_back(A.front());
+
+    for (auto it : A) {
+        cerr << it.x << ' ' << it.y << endl;
+    }
+
     vector<point> ST = {A[0], A[1]};
-    for(int i=2; i<n; i++) {
-        point p0, p1, p2 = A[i];
-        while(ST.size() > 1) {
+    for (int i = 2; i <= n; i++) {
+        point p1, p2 = A[i];
+        while (ST.size() > 1) {
             p0 = ST[ST.size()-2]; p1 = ST[ST.size()-1];
             if (p0.cross(p1, p2) <= 0) {
-                // change the camparison above to < if you want to keep all points on periferi
+                // change the above sign to < if you want to preserve all points on periferi
                 ST.pop_back();
             }
             else break;
         }
         ST.push_back(p2);
     }
+    A.pop_back();
+    ST.pop_back();
     return ST;
 }
 
