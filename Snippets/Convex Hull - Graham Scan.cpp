@@ -46,10 +46,6 @@ vector<point> convexHull(vector<point> &A) {
     reverse (A.begin() + idx, A.end());
     A.push_back(A.front());
 
-    for (auto it : A) {
-        cerr << it.x << ' ' << it.y << endl;
-    }
-
     vector<point> ST = {A[0], A[1]};
     for (int i = 2; i <= n; i++) {
         point p1, p2 = A[i];
