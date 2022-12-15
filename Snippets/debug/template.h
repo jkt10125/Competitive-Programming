@@ -52,7 +52,29 @@ ostream &operator << (ostream &os, const set<T> &s) {
     for (auto it = s.begin(); it != s.end(); it++) {
         os << *it;
         if (it != (--s.end())) {
-            cout << ' ';
+            os << ' ';
+        }
+    }
+    return os;
+}
+
+// template <typename T>
+// ostream &operator << (ostream &os, const ordered_set<T> &s) {
+//     for (auto it = s.begin(); it != s.end(); it++) {
+//         os << *it;
+//         if (it != (--s.end())) {
+//             os << ' ';
+//         }
+//     }
+//     return os;
+// }
+
+template <typename T>
+ostream &operator << (ostream &os, const multiset<T> &s) {
+    for (auto it = s.begin(); it != s.end(); it++) {
+        os << *it;
+        if (it != (--s.end())) {
+            os << ' ';
         }
     }
     return os;
@@ -63,7 +85,7 @@ ostream &operator << (ostream &os, const vector<T> &v) {
 	for (auto it = v.begin(); it != v.end(); it++) {
         os << *it;
         if (it != (--v.end())) {
-            cout << ' ';
+            os << ' ';
         }
     }
 	return os;
@@ -78,9 +100,9 @@ ostream &operator << (ostream &os, const pair<T, S> &p) {
 template <typename T, typename S>
 ostream &operator << (ostream &os, const map<T, S> &m) {
     for (auto it = m.begin(); it != m.end(); it++) {
-        os << it->first << ' : ' << it->second;
-        if (it != (--m.end())) {
-            cout << '\n';
+        os << it->first << " : " << it->second;
+        if (it != (m.end())) {
+            os << '\n';
         }
     }
     return os;
