@@ -14,6 +14,12 @@ struct point {
     int cross (const point &P, const point &Q) const {
         return (P - *this).cross (Q - *this);
     }
+
+
+
+    bool operator == (const point &P) const {
+        return (x == P.x && y == P.y);
+    }
 };
 
 vector<point> convexHull(vector<point> &A) {
@@ -55,6 +61,7 @@ vector<point> convexHull(vector<point> &A) {
         ST.push_back(p2);
     }
     A.pop_back();
+    assert(ST.front() == ST.back());
     ST.pop_back();
     return ST;
 }
