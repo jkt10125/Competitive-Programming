@@ -41,6 +41,12 @@ istream &operator >> (istream &is, vector<T> &v) {
 	return is;
 }
 
+template <typename T, size_t n>
+istream &operator >> (istream &is, array<T, n> &a) {
+    for (int i = 0; i < n; i++) is >> a[i];
+    return is;
+} 
+
 template <typename T, typename S>
 istream &operator >> (istream &is, pair<T, S> &p) {
 	is >> p.ff >> p.ss;
@@ -55,6 +61,15 @@ ostream &operator << (ostream &os, const set<T> &s) {
             os << ' ';
         }
     }
+    return os;
+}
+
+template <typename T, size_t n>
+ostream &operator << (ostream &os, const array<T, n> &a) {
+    for (int i = 0; i < n - 1; i++) {
+        os << a[i] << ' ';
+    }
+    os << a[n - 1];
     return os;
 }
 
