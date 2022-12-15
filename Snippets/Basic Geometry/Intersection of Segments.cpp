@@ -37,26 +37,11 @@ int doubleTheAreaOfTriangle (point &p1, point &p2, point &p3) {
     return abs (p1.cross (p2, p3));
 }
 
-point p0;
-
-bool cmp(point p1, point p2) {
-    int v = p0.cross (p1, p2);
-    return (!v) ? (p1.y < p2.y) : (v > 0);
-}
-
-int doubleTheAreaOfPolygon (vector<point> &p) {
-    int n = p.size();
+int doubleTheAreaOfPolygon (vector<point> &A) {
+    int n = A.size();
     int area = 0;
-    p0 = p[0];
-    for (int i = 0; i < n; i++) {
-        if (p[i].y < p0.y) {
-            p0 = p[i];
-        }
-    }
-    sort (p.begin(), p.end(), cmp);
-
     for (int i = 1; i < n - 1; i++) {
-        area += doubleTheAreaOfTriangle (p0, p[i], p[i + 1]);
+        area += doubleTheAreaOfTriangle (A[0], A[i], A[i + 1]);
     }
     return area;
 }
