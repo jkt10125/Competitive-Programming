@@ -59,7 +59,25 @@ vector<int> suffixArray (string &s) {
         }
         k++;
     }
+
+    k = 0;
+    vector<int> lcp(n);
+    for (int i = 0; i < n - 1; i++) {
+        int pi = eq_class[i];
+        int j = p[pi - 1];
+        while (s[i + k] == s[p[eq_class[i] - 1] + k]) {
+            k++;
+        }
+        lcp[eq_class[i]] = k;
+        k = max(k - 1, 0);
+    }
     
+    // O(n)
+    long long distinctSubstringCount = 0;
+    for (int i = 0; i < n; i++) {
+        distinctSubstringCount += (long long)(p[i] - lcp[i]);
+    }
+
     s.pop_back();
     // p.erase(p.begin());
     return p;
@@ -104,40 +122,42 @@ int substringSearch (string &w, string &s, vector<int> &p) {
     return u - d + 1;
 }
 
-vector<int> LCP (string &s, vector<int> &p) {
-    int n = s.size();
-    vector<int> rank(n, 0);
-    for (int i = 0; i < n; i++) {
-        rank[p[i]] = i;
-    }
+/* Requires little bit more computation than suffixArray inbuilt lcp */
 
-    int k = 0;
-    vector<int> lcp(n - 1, 0);
-    for (int i = 0; i < n; i++) {
-        if (rank[i] == n - 1) {
-            k = 0;
-            continue;
-        }
-        const int j = p[rank[i] + 1];
-        while (i + k < n && j + k < n) {
-            if (s[i + k] != s[j + k]) break;
-            k++;
-        }
-        lcp[rank[i]] = k;
-        if (k) k--;
-    }
-    return lcp;
-}
+// vector<int> LCP (string &s, vector<int> &p) {
+//     int n = s.size();
+//     vector<int> rank(n, 0);
+//     for (int i = 0; i < n; i++) {
+//         rank[p[i]] = i;
+//     }
+
+//     int k = 0;
+//     vector<int> lcp(n - 1, 0);
+//     for (int i = 0; i < n; i++) {
+//         if (rank[i] == n - 1) {
+//             k = 0;
+//             continue;
+//         }
+//         const int j = p[rank[i] + 1];
+//         while (i + k < n && j + k < n) {
+//             if (s[i + k] != s[j + k]) break;
+//             k++;
+//         }
+//         lcp[rank[i]] = k;
+//         if (k) k--;
+//     }
+//     return lcp;
+// }
 
 // O(n logn)
 // NOTE :: Empty substring is not counted here!
-int countDistinctSubstring (string &s) {
-    int n = s.size();
-    vector<int> p = suffixArray(s);
-    vector<int> lcp = LCP(s, p);
-    int sum = accumulate(lcp.begin(), lcp.end(), 0ll);
-    return n * (n + 1) / 2 - sum;
-}
+// int countDistinctSubstring (string &s) {
+//     int n = s.size();
+//     vector<int> p = suffixArray(s);
+//     vector<int> lcp = LCP(s, p);
+//     int sum = accumulate(lcp.begin(), lcp.end(), 0ll);
+//     return n * (n + 1) / 2 - sum;
+// }
 
 int main() {
     string s;

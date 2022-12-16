@@ -1,38 +1,25 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define int long long
-const int SIZE = 1000;
 
-void count_sort(vector<int> &A, int p[]) {
-    int n = A.size(), hsh[SIZE] = {0};
-    for(int i=0; i<n; i++) hsh[p[i]]++;
-    for(int i=1; i<SIZE; i++) hsh[i] += hsh[i-1];
-    for(int i=SIZE-1; i>0; i--) hsh[i] = hsh[i-1];
-    hsh[0] = 0;
-    vector<int> B(n);
-    for(int i=0; i<n; i++) {
-        B[hsh[p[i]]++] = A[i];
-    }
-    A = B;
-}
-
-void radix_sort(vector<int> &A) {
-    const int BLOCKS = 4;
+// O(n * m)
+// NOTE: Below sort function works only when the numbers are from [0, n - 1]
+template <typename T, size_t m>
+void countSort (vector<array<T, m>> &A) {
     int n = A.size();
-    int p[n];
-    for(int i=0; i<BLOCKS; i++) {
-        for(int j=0; j<n; j++) p[j] = (i) ? A[j] / (i * SIZE) % SIZE : A[j] % SIZE;
-        count_sort(A, p); 
-    }
-}
-
-signed main() {
-    int n;
-    cin >> n;
-    vector<int> A(n);
-    for(int i=0; i<n; i++) cin >> A[i];
-
-    radix_sort(A);
-    for(int i=0; i<n; i++) cout<<A[i]<<" ";
-    return 0;
+    for (int j = m - 1; j >= 0; j--) {
+        vector<int> H(n);
+        for (int i = 0; i < n; i++) {
+            H[A[i][j]]++;
+        }
+        for (int i = 1; i < n; i++) {
+            H[i] += H[i - 1];
+        }
+        H.pop_back();
+        H.emplace (H.begin(), 0);
+        vector<array<T, m>> B(n);
+        for (int i = 0; i < n; i++) {
+            B[H[A[i][j]]++] = A[i];
+        }
+        A.swap(B);
+    } 
 }
