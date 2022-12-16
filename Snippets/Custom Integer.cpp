@@ -132,7 +132,4 @@ class mint {
     }
 };
 
-// int main() {
-//     mint a(23, 6), b(13, 6);
-//     if(a == b) cout << " YES";
-// }
+// ALWAYS REMEMBER TO INITIALIZE THE mint variable to some mod value
