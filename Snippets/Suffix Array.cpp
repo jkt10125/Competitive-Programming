@@ -1,6 +1,29 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// O(n * m)
+// NOTE: Below sort function works only when the numbers are from [0, n - 1]
+template <typename T, size_t m>
+void countSort (vector<array<T, m>> &A) {
+    int n = A.size();
+    for (int j = m - 1; j >= 0; j--) {
+        vector<int> H(n);
+        for (int i = 0; i < n; i++) {
+            H[A[i][j]]++;
+        }
+        for (int i = 1; i < n; i++) {
+            H[i] += H[i - 1];
+        }
+        H.pop_back();
+        H.emplace (H.begin(), 0);
+        vector<array<T, m>> B(n);
+        for (int i = 0; i < n; i++) {
+            B[H[A[i][j]]++] = A[i];
+        }
+        A.swap(B);
+    } 
+}
+
 vector<int> suffixArray (string &s) {
     s.push_back('$');
     int n = s.size();
@@ -21,16 +44,16 @@ vector<int> suffixArray (string &s) {
 
     int k = 0;
     while ((1 << k) < n) {
-        vector<pair<pair<int, int>, int>> A(n);
+        vector<array<int, 3>> A(n);
         for (int i = 0; i < n; i++) {
-            A[i] = {{eq_class[i], eq_class[(i + (1 << k)) % n]}, i};
+            A[i] = {eq_class[i], eq_class[(i + (1 << k)) % n], i};
         }
-        sort (A.begin(), A.end());
-        for (int i = 0; i < n; i++) p[i] = A[i].second;
+        countSort(A);
+        for (int i = 0; i < n; i++) p[i] = A[i][2];
         eq_class[p[0]] = 0;
         for (int i = 1; i < n; i++) {
             eq_class[p[i]] = eq_class[p[i - 1]];
-            if (A[i].first != A[i - 1].first) {
+            if (A[i][0] != A[i - 1][0] || A[i][1] != A[i - 1][1]) {
                 eq_class[p[i]]++;
             }
         }
@@ -38,7 +61,7 @@ vector<int> suffixArray (string &s) {
     }
     
     s.pop_back();
-    p.erase(p.begin());
+    // p.erase(p.begin());
     return p;
 }
 
@@ -119,12 +142,8 @@ int countDistinctSubstring (string &s) {
 int main() {
     string s;
     cin >> s;
-    // s.push_back('@');
-    // auto sa = suffixArray(s);
-    // for (int i : sa) cout << i << ' ';
-    // string t;
-    // cin >> t;
-    // cout << substringSearch(t, s, sa);
-    cout << countDistinctSubstring(s);
+    for (int i : suffixArray(s)) {
+        cout << i << ' ';
+    }
 
 }
