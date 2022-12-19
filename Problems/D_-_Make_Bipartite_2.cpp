@@ -80,20 +80,22 @@ signed main() {
 
     if (!ok) cout << 0 << endl;
     else {
-        dfs(1);
+        for (int i = 1; i <= n; i++) {
+            if (!vis[i]) {
+                dfs(i);
+            }
+        }
         int ans = 0;
         map<int, array<int, 2>> M;
-        array<int, 2> col = {0, 0};
         for (int i = 1; i <= n; i++) {
             M[d.Find(i).first][colour[i]]++;
-            col[colour[i]]++;
         }
         for (int i = 1; i <= n; i++) {
             ans += M[d.Find(i).first][1 - colour[i]] - A[i].size();
         }
         for (auto it : M) {
             int val = it.second[0] + it.second[1];
-            ans += (val * (col[0] + col[1] - val));
+            ans += (val * (n - val));
         }
         cout << ans / 2 << endl;
     }
