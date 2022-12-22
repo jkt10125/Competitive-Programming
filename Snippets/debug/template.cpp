@@ -7,10 +7,8 @@ using namespace std;
 
 const string YES = "YES";
 const string Yes = "Yes";
-const string yes = "yes";
 const string NO = "NO";
 const string No = "No";
-const string no = "no";
 
 template <typename T>
 istream &operator >> (istream &is, vector<T> &v) {
@@ -97,6 +95,11 @@ ostream &operator << (ostream &os, const map<T, S> &m) {
             os << '\n';
         }
     }
+    return os;
+}
+
+ostream &operator << (ostream &os, const bool &b) {
+    os << ((b) ? YES : NO);
     return os;
 }
 
