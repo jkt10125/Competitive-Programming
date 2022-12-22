@@ -1,43 +1,20 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-
-#define int long long
-
-#define FOR(i, a, b, c) for(int i=(int)a; i<=(int)b; i+=(int)c)
-#define F0R(i, n) for(int i=0; i<(int)n; i++)
-#define F1R(i, n) for(int i=1; i<=(int)n; i++)
-#define FORn(i, a, b, c) for(int i=(int)a; i>=(int)b; i+=(int)c)
-#define F0Rn(i, n) for(int i=(int)n-1; i>=0; i--)
-#define F1Rn(i, n) for(int i=(int)n; i>=1; i--)
-#define for_all(A) for(auto &it : A)
+// #define int long long
 
 #define fastIO ios::sync_with_stdio(0); cin.tie(0)
 
-typedef vector<int> vi;
-typedef vector<vi> vvi;
-typedef pair<int, int> pii;
-typedef vector<pii> vpii;
-typedef vector<vpii> vvpii;
-
-#define all(a) a.begin(), a.end()
-
-#define mp make_pair
-#define pb push_back
-#define ppb pop_back
-#define pf push_front
-#define ppf pop_front
-#define ff first
-#define ss second
-
 const string YES = "YES";
 const string Yes = "Yes";
+const string yes = "yes";
 const string NO = "NO";
 const string No = "No";
+const string no = "no";
 
 template <typename T>
 istream &operator >> (istream &is, vector<T> &v) {
-	for_all (v) is >> it;
+	for (T &x : v) is >> x;
 	return is;
 }
 
@@ -49,7 +26,7 @@ istream &operator >> (istream &is, array<T, n> &a) {
 
 template <typename T, typename S>
 istream &operator >> (istream &is, pair<T, S> &p) {
-	is >> p.ff >> p.ss;
+	is >> p.first >> p.second;
 	return is;
 }
 
@@ -122,3 +99,26 @@ ostream &operator << (ostream &os, const map<T, S> &m) {
     }
     return os;
 }
+
+/* !---> code starts <---! */
+
+void precompute() {
+
+}
+
+void solve() {
+
+}
+
+signed main() {
+    fastIO();
+    precompute();
+    signed t = 1;
+    cin >> t;
+    for (signed __ = 1; __ <= t; __++) {
+        // cout << "Case #" << __ << ": ";
+        solve();
+    }
+}
+
+/* !--->  code ends  <---! */
