@@ -5,10 +5,7 @@ using namespace std;
 
 #define fastIO ios::sync_with_stdio(0); cin.tie(0)
 
-const string YES = "YES";
-const string Yes = "Yes";
-const string NO = "NO";
-const string No = "No";
+/* input operations */
 
 template <typename T>
 istream &operator >> (istream &is, vector<T> &v) {
@@ -28,6 +25,8 @@ istream &operator >> (istream &is, pair<T, S> &p) {
 	return is;
 }
 
+/* output operations */
+
 template <typename T>
 ostream &operator << (ostream &os, const set<T> &s) {
     for (auto it = s.begin(); it != s.end(); it++) {
@@ -41,7 +40,7 @@ ostream &operator << (ostream &os, const set<T> &s) {
 
 template <typename T, size_t n>
 ostream &operator << (ostream &os, const array<T, n> &a) {
-    for (int i = 0; i < n - 1; i++) {
+    for (size_t i = 0; i < n - 1; i++) {
         os << a[i] << ' ';
     }
     os << a[n - 1];
@@ -98,23 +97,20 @@ ostream &operator << (ostream &os, const map<T, S> &m) {
     return os;
 }
 
-ostream &operator << (ostream &os, const bool &b) {
-    os << ((b) ? YES : NO);
-    return os;
-}
+const string out[] = {"NO", "YES"};
 
 /* !---> code starts <---! */
 
 void precompute() {
-
+    
 }
 
 void solve() {
-
+    
 }
 
 signed main() {
-    fastIO();
+    fastIO;
     precompute();
     signed t = 1;
     cin >> t;
