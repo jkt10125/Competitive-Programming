@@ -13,14 +13,19 @@ Instructions:
 #include <bits/stdc++.h>
 using namespace std;
 
-typedef int treap_data_type;
+typedef char treap_data_type;
 struct item {
 	int prior, cnt;
 	treap_data_type value;
 	item *l, *r;
 	bool rev;
 	item () { }
-	item (treap_data_type value, int prior) : value(value), prior(prior), l(NULL), r(NULL), rev(0) { }
+	item (treap_data_type _value, int _prior) {
+        value = _value;
+        prior = _prior;
+        l = r = nullptr;
+        rev = false;
+    }
 };
 
 typedef item * pitem;
@@ -128,7 +133,7 @@ void output (pitem t) {
 	if (!t) return;
 	push(t);
 	output(t->l);
-	cout << t->value << ' ';
+	cout << t->value;
 	output(t->r);
 }
 
