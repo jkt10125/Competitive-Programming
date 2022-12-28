@@ -8,7 +8,7 @@ int min_prime_factor[N + 1];
 
 void sieve () {
 	for (int i = 2; i <= N; i++) {
-		if (min_prime_factor[i] == 0) { 
+		if (!min_prime_factor[i]) { 
 			min_prime_factor[i] = i;
 			prime.push_back(i); 
 		}
@@ -82,21 +82,14 @@ int phi (int n) {
 
 // below code is extremely helpful in applying inclusion-exclusion principle
 vector<array<int, 2>> divisors (int n) {
-    vector<int> p;
-    for (int i = 2; i * i <= n; i++) {
-        if(n % i == 0) {
-            p.push_back(i);
-            while(n % i == 0) n /= i;
-        }
-    }
-    if (n > 1) p.push_back(n);
+    vector<array<int, 2>> p = factor (n);
     n = p.size();
     vector<array<int, 2>> a(1 << n);
     a[0] = {1, 1};
     for (int i = 1; i < (1 << n); i++) {
         int j = __builtin_ctz(i);
         auto [x, y] = a[i ^ (1 << j)];
-        a[i] = {x * p[j], -y};
+        a[i] = {x * p[j][0], -y};
     }
     return a;
 }
