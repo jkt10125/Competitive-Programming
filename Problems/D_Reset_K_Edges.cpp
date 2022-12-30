@@ -11,7 +11,7 @@ int n, k;
 
 vector<vector<int>> A;
 vector<int> p, u, l;
-multiset<pair<int, int>> lvl;
+vector<array<int, 2>> lvl;
 
 void dfs (int x) {
     for (int it : A[x]) {
@@ -22,7 +22,6 @@ void dfs (int x) {
 
 void mark (int x) {
     u[x] = 1;
-    lvl.erase(lvl.find({l[x], x}));
     for (int it : A[x]) {
         if (!u[it]) {
             mark(it);
@@ -34,18 +33,23 @@ bool f (int h) {
     u.assign(A.size(), 0);
     lvl.clear();
     for (int i = 2; i <= n; i++) {
-        lvl.insert({l[i], i});
+        lvl.push_back({l[i], i});
     }
 
     int moves = k;
-    while (lvl.rbegin()->first > h) {
+    sort (lvl.begin(), lvl.end());
+    int idx = lvl.size() - 1;
+    while (lvl[idx][0] > h) {
         if (!moves) return false;
-        int u = lvl.rbegin()->second;
+        int v = lvl[idx][1];
         for (int i = 0; i < h - 1; i++) {
-            u = p[u];
+            v = p[v];
         }
-        mark(u);
+        mark(v);
         moves--;
+        while (idx >= 0 && u[lvl[idx][1]]) {
+            idx--;
+        }
     }
     return true;
 }
