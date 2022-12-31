@@ -74,13 +74,13 @@ struct Z {
         res /= rhs;
         return res;
     }
-    friend std::istream &operator>>(std::istream &is, Z &a) {
+    friend istream &operator>>(istream &is, Z &a) {
         x64 v;
         is >> v;
         a = Z(v);
         return is;
     }
-    friend std::ostream &operator<<(std::ostream &os, const Z &a) {
+    friend ostream &operator<<(ostream &os, const Z &a) {
         return os << a.val();
     }
 };
