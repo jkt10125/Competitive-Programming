@@ -2,134 +2,85 @@
 using namespace std;
 
 constexpr int P = 998244353;
+using x64 = long long;
 
-class mint {
-    int M, x;
-    public:
-
-    int norm (long long v) {
-        return (v % M + M) % M;
+int norm(int x) {
+    if (x < 0) {
+        x += P;
     }
-
-    mint (int mod, long long v = 0) {
-        M = mod;
-        x = norm(v);
+    if (x >= P) {
+        x -= P;
     }
+    return x;
+}
 
-    mint () {
-        M = x = 0;
-    }
-
-    mint power (mint a, long long b) const {
-        mint res (a.M, 1);
-        while (b) {
-            if (b & 1) res *= a;
-            a *= a;
-            b >>= 1;
+template <class T>
+T power(T a, x64 b) {
+    T res = 1;
+    for (; b; b /= 2, a *= a) {
+        if (b % 2) {
+            res *= a;
         }
-        return res;
     }
+    return res;
+}
 
-    mint operator - () const {
-        return mint(M, -x);
-    }
-
-    mint inv () const {
-        return power (*this, M - 2);
-    }
-
-    int val () const {
+struct Z {
+    int x;
+    Z(int x = 0) : x(norm(x)) {}
+    Z(x64 x) : x(norm(x % P)) {}
+    int val() const {
         return x;
     }
-
-    mint &operator *= (const mint &rhs) {
-        x = (long long)x * rhs.x % M;
+    Z operator-() const {
+        return Z(norm(P - x));
+    }
+    Z inv() const {
+        assert(x != 0);
+        return power(*this, P - 2);
+    }
+    Z &operator*=(const Z &rhs) {
+        x = x64(x) * rhs.x % P;
         return *this;
     }
-
-    mint &operator += (const mint &rhs) {
-        x = norm (x + rhs.x);
+    Z &operator+=(const Z &rhs) {
+        x = norm(x + rhs.x);
         return *this;
     }
-
-    mint &operator -= (const mint &rhs) {
-        x = norm (x - rhs.x);
+    Z &operator-=(const Z &rhs) {
+        x = norm(x - rhs.x);
         return *this;
     }
-
-    mint &operator /= (const mint &rhs) {
+    Z &operator/=(const Z &rhs) {
         return *this *= rhs.inv();
     }
-
-    mint operator * (const mint &rhs) {
-        mint res = *this;
+    friend Z operator*(const Z &lhs, const Z &rhs) {
+        Z res = lhs;
         res *= rhs;
         return res;
     }
-
-    mint operator / (const mint &rhs) {
-        mint res = *this;
-        res /= rhs;
-        return res;
-    }
-
-    mint operator + (const mint &rhs) {
-        mint res = *this;
+    friend Z operator+(const Z &lhs, const Z &rhs) {
+        Z res = lhs;
         res += rhs;
         return res;
     }
-
-    mint operator - (const mint &rhs) {
-        mint res = *this;
+    friend Z operator-(const Z &lhs, const Z &rhs) {
+        Z res = lhs;
         res -= rhs;
         return res;
     }
-
-    mint &operator += (const long long &rhs) {
-        return *this += mint(M, rhs);
+    friend Z operator/(const Z &lhs, const Z &rhs) {
+        Z res = lhs;
+        res /= rhs;
+        return res;
     }
-
-    mint &operator -= (const long long &rhs) {
-        return *this -= mint(M, rhs);
+    friend std::istream &operator>>(std::istream &is, Z &a) {
+        x64 v;
+        is >> v;
+        a = Z(v);
+        return is;
     }
-
-    mint &operator *= (const long long &rhs) {
-        return *this *= mint(M, rhs);
-    }
-
-    mint &operator /= (const long long &rhs) {
-        return *this /= mint(M, rhs);
-    }
-
-    mint operator + (const long long &rhs) {
-        return *this + mint(M, rhs);
-    }
-
-    mint operator - (const long long &rhs) {
-        return *this - mint(M, rhs);
-    }
-
-    mint operator * (const long long &rhs) {
-        return *this * mint(M, rhs);
-    }
-
-    mint operator / (const long long &rhs) {
-        return *this / mint(M, rhs);
-    }
-
-    bool operator == (const mint &rhs) const {
-        return x == rhs.x;
-    }
-
-    mint operator = (const long long &rhs) {
-        x = norm(rhs);
-        return *this;
-    }
-
-    friend ostream &operator << (ostream &os, const mint &rhs) {
-        os << rhs.val();
-        return os;
+    friend std::ostream &operator<<(std::ostream &os, const Z &a) {
+        return os << a.val();
     }
 };
-
-// ALWAYS REMEMBER TO INITIALIZE THE mint variable to some mod value
