@@ -54,6 +54,7 @@ struct Writer {
             if (LINE_AND_NAME) {                              \
                 std::cerr << "\x1b[0;33m";                    \
                 std::cerr << "Line " << __LINE__ << ":\n";    \
+                std::cerr << "\x1b[0m";                       \
             }                                                 \
             err(_it, args);                                   \
         }
