@@ -1,150 +1,80 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class Matrix {
-public:
-	int row, coloumn;
-	vector<vector<int>> matrix;
-	
-    Matrix() {}
-    
-    Matrix(int r, int c, int val=0) {
-		if(r <= 0 || c <= 0) {
-            throw("wrong dimensions ()");
+using matrix = vector<vector<int>>;
+
+matrix operator + (const matrix &lhs, const matrix &rhs) {
+    if(lhs.size() != rhs.size() || lhs[0].size() != rhs[0].size()) {
+        throw("wrong dimensions (+)");
+    }
+    matrix C(lhs.size(), vector<int> (lhs[0].size(), 0));
+    for(int i = 0; i < lhs.size(); i++) {
+        for(int j = 0; j < lhs[0].size(); j++) {
+            C[i][j] = lhs[i][j] + rhs[i][j];
         }
-		row = r; coloumn = c;
-		matrix = vector<vector<int>> (r, vector<int> (c, val));
-	}
-	
-    // Matrix transpose
-	Matrix operator!() {
-		Matrix A(coloumn, row);
-		for(int i=0; i<row; i++) {
-			for(int j=0; j<coloumn; j++) {
-				A.matrix[j][i] = this->matrix[i][j];
-			}
-		}
-		return A;
-	}
+    }
+    return C;
+}
 
-	Matrix operator + (const Matrix &A) {
-		if(this->row != A.row || this->coloumn != A.coloumn) {
-            throw("wrong dimensions (+)");
+matrix operator - (const matrix &lhs, const matrix &rhs) {
+    if(lhs.size() != rhs.size() || lhs[0].size() != rhs[0].size()) {
+        throw("wrong dimensions (-)");
+    }
+    matrix C(lhs.size(), vector<int> (lhs[0].size(), 0));
+    for(int i = 0; i < lhs.size(); i++) {
+        for(int j = 0; j < lhs[0].size(); j++) {
+            C[i][j] = lhs[i][j] - rhs[i][j];
         }
-		Matrix C(row, coloumn);
-		for(int i=0; i<row; i++) {
-			for(int j=0; j<coloumn; j++) {
-				C.matrix[i][j] = this->matrix[i][j] + A.matrix[i][j];
-			}
-		}
-		return C;
-	}
+    }
+    return C;
+}
 
-	Matrix operator+() {
-		return *this;
-	}
-
-	Matrix operator += (const Matrix &A) {
-		if(this->row != A.row || this->coloumn != A.coloumn) {
-            throw("wrong dimensions (+=)");
-        }
-		for(int i=0; i<row; i++) {
-			for(int j=0; j<coloumn; j++) {
-				this->matrix[i][j] = this->matrix[i][j] + A.matrix[i][j];
-			}
-		}
-		return *this;
-	}
-
-	Matrix operator - (const Matrix &A) {
-		if(this->row != A.row || this->coloumn != A.coloumn) {
-            throw("wrong dimensions (-)");
-        }
-		Matrix C(row, coloumn);
-		for(int i=0; i<row; i++) {
-			for(int j=0; j<coloumn; j++) {
-				C.matrix[i][j] = this->matrix[i][j] - A.matrix[i][j];
-			}
-		}
-		return C;
-	}
-
-	Matrix operator - () {
-		Matrix C(row, coloumn);
-		for(int i=0; i<row; i++) {
-			for(int j=0; j<coloumn; j++) {
-				C.matrix[i][j] = -this->matrix[i][j];
-			}
-		}
-		return C;
-	}
-
-	Matrix operator -= (const Matrix &A) {
-		if(this->row != A.row || this->coloumn != A.coloumn) {
-            throw("wrong dimensions (-=)");
-        }
-		for(int i=0; i<row; i++) {
-			for(int j=0; j<coloumn; j++) {
-				this->matrix[i][j] = this->matrix[i][j] - A.matrix[i][j];
-			}
-		}
-		return *this;
-	}
-
-	Matrix operator * (const Matrix &A) {
-		if(this->coloumn != A.row) {
-            throw("wrong dimensions (*)");
-        }
-		Matrix C(this->row, A.coloumn);
-		for (int i = 0; i < this->row; i++) {
-			for (int j = 0; j < A.coloumn; j++) {
-				for (int k = 0; k < this->coloumn; k++) {
-					C.matrix[i][j] += this->matrix[i][k] * A.matrix[k][j];
-				}
-			}
-		}
-		return C;
-	}
-
-	Matrix operator = (const Matrix &A) {
-		this->row = A.row;
-		this->coloumn = A.coloumn;
-		this->matrix = A.matrix;
-		return *this;
-	}
-
-	bool operator == (const Matrix &A) {
-		return (this->matrix == A.matrix);
-	}
-
-	friend istream &operator >> (istream &is, Matrix &A) {
-		for (vector<int> &it : A.matrix) {
-            for (int &val : it) {
-                is >> val;
+matrix operator * (const matrix &lhs, const matrix &rhs) {
+    if(lhs[0].size() != rhs.size()) {
+        throw("wrong dimensions (*)");
+    }
+    matrix C(lhs.size(), vector<int> (rhs[0].size(), 0));
+    for (int i = 0; i < lhs.size(); i++) {
+        for (int j = 0; j < rhs[0].size(); j++) {
+            for (int k = 0; k < lhs[0].size(); k++) {
+                C[i][j] += lhs[i][k] * rhs[k][j];
             }
         }
-		return is;
-	}
+    }
+    return C;
+}
 
-	friend ostream &operator << (ostream &os, const Matrix &A) {
-		for (vector<int> it : A.matrix) {
-            for (int &val : it) {
-                os << val << ' ';
-            }
-            os << endl;    
+istream &operator >> (istream &is, matrix &A) {
+    for (vector<int> &it : A) {
+        for (int &val : it) {
+            is >> val;
         }
-		return os;
-	}
-};
+    }
+    return is;
+}
 
-template <typename int>
-Matrix<int> POWER(Matrix<int> A, int n) {
-	Matrix<int> ans(A.row, A.coloumn, 0);
-	ans.matrix[0][0] = ans.matrix[1][1] = 1;
+ostream &operator << (ostream &os, const matrix &A) {
+    for (vector<int> it : A) {
+        for (int &val : it) {
+            os << val << ' ';
+        }
+        os << endl;    
+    }
+    return os;
+}
+
+matrix power(matrix A, int n) {
+	matrix res(A.size(), vector<int> (A[0].size(), 0));
+    for (int i = 0; i < A.size(); i++) res[i][i] = 1;
 
 	while(n) {
-		if(n & 1) ans *= A;
+		if(n & 1) res = res * A;
 		n = n >> 1; A = A * A;
 	}
-	return ans;
+	return res;
+}
+
+int main() {
+    
+    return 0;
 }
