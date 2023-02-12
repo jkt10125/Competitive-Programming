@@ -1,16 +1,24 @@
-template <typename T = int>
+#include <bits/stdc++.h>
+using namespace std;
+
 class Matrix {
 public:
 	int row, coloumn;
-	vector<vector<T>> matrix;
-	Matrix(int r=0, int c=0, int val=0) {
-		if(r <= 0 || c <= 0) cout<<"ERROR!";
+	vector<vector<int>> matrix;
+	
+    Matrix() {}
+    
+    Matrix(int r, int c, int val=0) {
+		if(r <= 0 || c <= 0) {
+            throw("wrong dimensions ()");
+        }
 		row = r; coloumn = c;
-		matrix = vector<vector<T>> (r, vector<T> (c, val));
+		matrix = vector<vector<int>> (r, vector<int> (c, val));
 	}
 	
+    // Matrix transpose
 	Matrix operator!() {
-		Matrix<T> A(coloumn, row);
+		Matrix A(coloumn, row);
 		for(int i=0; i<row; i++) {
 			for(int j=0; j<coloumn; j++) {
 				A.matrix[j][i] = this->matrix[i][j];
@@ -19,22 +27,14 @@ public:
 		return A;
 	}
 
-	Matrix operator+(const Matrix &A) {
-		if(this->row != A.row || this->coloumn != A.coloumn) return Matrix<T> (0, 0);
-		Matrix<T> C(row, coloumn);
+	Matrix operator + (const Matrix &A) {
+		if(this->row != A.row || this->coloumn != A.coloumn) {
+            throw("wrong dimensions (+)");
+        }
+		Matrix C(row, coloumn);
 		for(int i=0; i<row; i++) {
 			for(int j=0; j<coloumn; j++) {
 				C.matrix[i][j] = this->matrix[i][j] + A.matrix[i][j];
-			}
-		}
-		return C;
-	}
-
-	Matrix operator+(const T &val) {
-		Matrix<T> C(row, coloumn);
-		for(int i=0; i<row; i++) {
-			for(int j=0; j<coloumn; j++) {
-				C.matrix[i][j] = this->matrix[i][j] + val;
 			}
 		}
 		return C;
@@ -44,8 +44,10 @@ public:
 		return *this;
 	}
 
-	Matrix operator+=(const Matrix &A) {
-		if(this->row != A.row || this->coloumn != A.coloumn) return Matrix<T> (0, 0);
+	Matrix operator += (const Matrix &A) {
+		if(this->row != A.row || this->coloumn != A.coloumn) {
+            throw("wrong dimensions (+=)");
+        }
 		for(int i=0; i<row; i++) {
 			for(int j=0; j<coloumn; j++) {
 				this->matrix[i][j] = this->matrix[i][j] + A.matrix[i][j];
@@ -54,18 +56,11 @@ public:
 		return *this;
 	}
 
-	Matrix operator+=(const T &val) {
-		for(int i=0; i<row; i++) {
-			for(int j=0; j<coloumn; j++) {
-				this->matrix[i][j] += val;
-			}
-		}
-		return *this;
-	}
-
-	Matrix operator-(const Matrix &A) {
-		if(this->row != A.row || this->coloumn != A.coloumn) return Matrix<T> (0, 0);
-		Matrix<T> C(row, coloumn);
+	Matrix operator - (const Matrix &A) {
+		if(this->row != A.row || this->coloumn != A.coloumn) {
+            throw("wrong dimensions (-)");
+        }
+		Matrix C(row, coloumn);
 		for(int i=0; i<row; i++) {
 			for(int j=0; j<coloumn; j++) {
 				C.matrix[i][j] = this->matrix[i][j] - A.matrix[i][j];
@@ -74,12 +69,8 @@ public:
 		return C;
 	}
 
-	Matrix operator-(const T &val) {
-		return *this + (-val);
-	}
-
-	Matrix operator-() {
-		Matrix<T> C(row, coloumn);
+	Matrix operator - () {
+		Matrix C(row, coloumn);
 		for(int i=0; i<row; i++) {
 			for(int j=0; j<coloumn; j++) {
 				C.matrix[i][j] = -this->matrix[i][j];
@@ -88,8 +79,10 @@ public:
 		return C;
 	}
 
-	Matrix operator-=(const Matrix &A) {
-		if(this->row != A.row || this->coloumn != A.coloumn) return Matrix<T> (0, 0);
+	Matrix operator -= (const Matrix &A) {
+		if(this->row != A.row || this->coloumn != A.coloumn) {
+            throw("wrong dimensions (-=)");
+        }
 		for(int i=0; i<row; i++) {
 			for(int j=0; j<coloumn; j++) {
 				this->matrix[i][j] = this->matrix[i][j] - A.matrix[i][j];
@@ -98,21 +91,14 @@ public:
 		return *this;
 	}
 
-	Matrix operator-=(const T &val) {
-		for(int i=0; i<row; i++) {
-			for(int j=0; j<coloumn; j++) {
-				this->matrix[i][j] -= val;
-			}
-		}
-		return *this;
-	}
-
-	Matrix operator*(const Matrix &A) {
-		if(this->coloumn != A.row) return Matrix<T> (0, 0);
-		Matrix<T> C(this->row, A.coloumn);
-		F0R(i, this->row) {
-			F0R(j, A.coloumn) {
-				F0R(k, this->coloumn) {
+	Matrix operator * (const Matrix &A) {
+		if(this->coloumn != A.row) {
+            throw("wrong dimensions (*)");
+        }
+		Matrix C(this->row, A.coloumn);
+		for (int i = 0; i < this->row; i++) {
+			for (int j = 0; j < A.coloumn; j++) {
+				for (int k = 0; k < this->coloumn; k++) {
 					C.matrix[i][j] += this->matrix[i][k] * A.matrix[k][j];
 				}
 			}
@@ -120,31 +106,40 @@ public:
 		return C;
 	}
 
-	Matrix operator=(const Matrix &A) {
+	Matrix operator = (const Matrix &A) {
 		this->row = A.row;
 		this->coloumn = A.coloumn;
 		this->matrix = A.matrix;
 		return *this;
 	}
 
-	bool operator==(const Matrix &A) {
+	bool operator == (const Matrix &A) {
 		return (this->matrix == A.matrix);
 	}
 
-	friend istream &operator>>(istream &is, Matrix &A) {
-		is >> A.matrix;
+	friend istream &operator >> (istream &is, Matrix &A) {
+		for (vector<int> &it : A.matrix) {
+            for (int &val : it) {
+                is >> val;
+            }
+        }
 		return is;
 	}
 
-	friend ostream &operator<<(ostream &os, const Matrix &A) {
-		os << A.matrix;
+	friend ostream &operator << (ostream &os, const Matrix &A) {
+		for (vector<int> it : A.matrix) {
+            for (int &val : it) {
+                os << val << ' ';
+            }
+            os << endl;    
+        }
 		return os;
 	}
 };
 
-template <typename T>
-Matrix<T> POWER(Matrix<T> A, int n) {
-	Matrix<T> ans(A.row, A.coloumn, 0);
+template <typename int>
+Matrix<int> POWER(Matrix<int> A, int n) {
+	Matrix<int> ans(A.row, A.coloumn, 0);
 	ans.matrix[0][0] = ans.matrix[1][1] = 1;
 
 	while(n) {
