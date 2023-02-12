@@ -65,7 +65,7 @@ ostream &operator << (ostream &os, const matrix &A) {
 
 matrix power(matrix A, int n) {
 	matrix res(A.size(), vector<int> (A[0].size(), 0));
-    	for (int i = 0; i < A.size(); i++) res[i][i] = 1;
+    for (int i = 0; i < A.size(); i++) res[i][i] = 1;
 
 	while(n) {
 		if(n & 1) res = res * A;
