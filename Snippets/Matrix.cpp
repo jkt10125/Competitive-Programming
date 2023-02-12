@@ -44,6 +44,16 @@ matrix operator * (const matrix &lhs, const matrix &rhs) {
     return C;
 }
 
+matrix operator % (const matrix &lhs, int mod) {
+    matrix C(lhs.size(), vector<int> (lhs[0].size(), 0));
+    for (int i = 0; i < lhs.size(); i++) {
+        for (int j = 0; j < lhs[0].size(); j++) {
+            C[i][j] = lhs[i][j] % mod;
+        }
+    }
+    return C;
+}
+
 istream &operator >> (istream &is, matrix &A) {
     for (vector<int> &it : A) {
         for (int &val : it) {
