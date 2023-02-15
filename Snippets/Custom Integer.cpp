@@ -1,86 +1,38 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-constexpr int P = 998244353;
-using x64 = long long;
+const int mod = 1e9 + 7;
 
-int norm(int x) {
-    if (x < 0) {
-        x += P;
-    }
-    if (x >= P) {
-        x -= P;
-    }
-    return x;
-}
+// part of code taken from ShahjalalShohag/code-library/NumberTheory/NumberPartition
 
-template <class T>
-T power(T a, x64 b) {
-    T res = 1;
-    for (; b; b /= 2, a *= a) {
-        if (b % 2) {
-            res *= a;
-        }
-    }
-    return res;
-}
-
-struct Z {
-    int x;
-    Z(int x = 0) : x(norm(x)) {}
-    Z(x64 x) : x(norm(x % P)) {}
-    int val() const {
-        return x;
-    }
-    Z operator-() const {
-        return Z(norm(P - x));
-    }
-    Z inv() const {
-        assert(x != 0);
-        return power(*this, P - 2);
-    }
-    Z &operator*=(const Z &rhs) {
-        x = x64(x) * rhs.x % P;
-        return *this;
-    }
-    Z &operator+=(const Z &rhs) {
-        x = norm(x + rhs.x);
-        return *this;
-    }
-    Z &operator-=(const Z &rhs) {
-        x = norm(x - rhs.x);
-        return *this;
-    }
-    Z &operator/=(const Z &rhs) {
-        return *this *= rhs.inv();
-    }
-    friend Z operator*(const Z &lhs, const Z &rhs) {
-        Z res = lhs;
-        res *= rhs;
-        return res;
-    }
-    friend Z operator+(const Z &lhs, const Z &rhs) {
-        Z res = lhs;
-        res += rhs;
-        return res;
-    }
-    friend Z operator-(const Z &lhs, const Z &rhs) {
-        Z res = lhs;
-        res -= rhs;
-        return res;
-    }
-    friend Z operator/(const Z &lhs, const Z &rhs) {
-        Z res = lhs;
-        res /= rhs;
-        return res;
-    }
-    friend istream &operator>>(istream &is, Z &a) {
-        x64 v;
-        is >> v;
-        a = Z(v);
-        return is;
-    }
-    friend ostream &operator<<(ostream &os, const Z &a) {
-        return os << a.val();
-    }
+template <const int32_t MOD>
+struct modint {
+  int32_t value;
+  modint() = default;
+  modint(int32_t value_) : value(value_) {}
+  inline modint<MOD> operator + (modint<MOD> other) const { int32_t c = this->value + other.value; return modint<MOD>(c >= MOD ? c - MOD : c); }
+  inline modint<MOD> operator - (modint<MOD> other) const { int32_t c = this->value - other.value; return modint<MOD>(c < 0 ? c + MOD : c); }
+  inline modint<MOD> operator * (modint<MOD> other) const { int32_t c = (int64_t)this->value * other.value % MOD; return modint<MOD>(c < 0 ? c + MOD : c); }
+  inline modint<MOD> &operator += (modint<MOD> other) { this->value += other.value; if (this->value >= MOD) this->value -= MOD; return *this; }
+  inline modint<MOD> &operator -= (modint<MOD> other) { this->value -= other.value; if (this->value < 0) this->value += MOD; return *this; }
+  inline modint<MOD> &operator *= (modint<MOD> other) { this->value = (int64_t)this->value * other.value % MOD; if (this->value < 0) this->value += MOD; return *this; }
+  inline modint<MOD> operator - () const { return modint<MOD>(this->value ? MOD - this->value : 0); }
+  modint<MOD> pow(uint64_t k) const { modint<MOD> x = *this, y = 1; for (; k; k >>= 1) { if (k & 1) y *= x; x *= x; } return y; }
+  modint<MOD> inv() const { return pow(MOD - 2); }  // MOD must be a prime
+  inline modint<MOD> operator / (modint<MOD> other) const { return *this * other.inv(); }
+  inline modint<MOD> operator /= (modint<MOD> other) { return *this *= other.inv(); }
+  inline bool operator == (modint<MOD> other) const { return value == other.value; }
+  inline bool operator != (modint<MOD> other) const { return value != other.value; }
+  inline bool operator < (modint<MOD> other) const { return value < other.value; }
+  inline bool operator > (modint<MOD> other) const { return value > other.value; }
 };
+template <int32_t MOD> modint<MOD> operator * (int64_t value, modint<MOD> n) { return modint<MOD>(value) * n; }
+template <int32_t MOD> modint<MOD> operator * (int32_t value, modint<MOD> n) { return modint<MOD>(value % MOD) * n; }
+template <int32_t MOD> istream &operator >> (istream & in, modint<MOD> &n) { return in >> n.value; }
+template <int32_t MOD> ostream &operator << (ostream & out, modint<MOD> n) { return out << n.value; }
+
+using mint = modint<mod>;
+
+int main() {
+
+}
