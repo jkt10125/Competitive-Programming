@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef int dt;
+typedef char dt;
 
 typedef struct {
     dt *data;
@@ -62,7 +62,7 @@ void erase (vector *v, int idx) {
     v->size--;
 }
 
-dt *at(vector *v, int idx) {
+dt *at (vector *v, int idx) {
     if (idx < 0 || idx >= v->size) {
         // error
         printf ("%d, out of range\n", idx);
@@ -71,7 +71,7 @@ dt *at(vector *v, int idx) {
     return &(v->data[idx]);
 }
 
-dt *upper_bound(vector *v, dt val) {
+dt *upper_bound (vector *v, dt val) {
     int ans = v->size;
     int l = 0, r = v->size - 1;
     while (l <= r) {
@@ -82,7 +82,7 @@ dt *upper_bound(vector *v, dt val) {
     return at(v, ans);
 }
 
-dt *lower_bound(vector *v, dt val) {
+dt *lower_bound (vector *v, dt val) {
     int ans = -1;
     int l = 0, r = v->size - 1;
     while (l <= r) {
@@ -118,100 +118,27 @@ void sort (vector *v, dt *s, dt *e, int (*cmp)(dt, dt)) {
     for (int i = start; i <= end; i++) { v->data[i] = temp[i - start]; }
 }
 
-void input(vector *v, int n) {
-    if (n < 1) *v = init();
-    else resize(v, n);
-    if (_Generic(v->data[0], char: 1, default: 0)) {
-        if (n) {
-            // printf("n != 0 [string]\n");
-        }
-        char c;
+void input (vector *v) {
+    clear(v); char c;
+    scanf("%c", &c);
+    while (c == ' ' || c == '\n') { scanf("%c", &c); }
+    while (c != ' ' && c != '\n') {
+        insert(v, c, v->size);
         scanf("%c", &c);
-        while (c == ' ' || c == '\n') {
-            scanf("%c", &c);
-        }
-        while (c != ' ' && c != '\n') {
-            insert(v, c, v->size);
-            scanf("%c", &c);
-        }
-    }
-    else {
-        if (!n) {
-            // printf("n == 0 [non-string]\n");
-            return ;
-        }
-        if (_Generic(v->data[0], int: 1, default: 0)) {
-            for (int i = 0; i < n; i++) {
-                int it;
-                scanf("%d", &it);
-                *(at(v, i)) = it;
-            }
-        }
-        else if (_Generic(v->data[0], double: 1, default: 0)) {
-            for (int i = 0; i < n; i++) {
-                double d;
-                scanf("%lf", &d);
-                *(at(v, i)) = d;
-            }
-        }
-        else {
-            // error
-            printf("input type error\n");
-            exit(1);
-        }
     }
 }
 
 void output (vector *v) {
-    if (_Generic(v->data[0], char: 1, default: 0)) {
-        for (int i = 0; i < v->size; i++) {
-            char c = v->data[i];
-            printf("%c", c);
-        }
-    }
-    else {
-        if (_Generic(v->data[0], int: 1, default: 0)) {
-            for (int i = 0; i < v->size; i++) {
-                printf("%d ", v->data[i]);
-            }
-        }
-        else if (_Generic(v->data[0], double: 1, default: 0)) {
-            for (int i = 0; i < v->size; i++) {
-                double d = v->data[i];
-                printf("%lf ", d);
-            }
-        }
-        else {
-            // error
-            printf("output type error\n");
-            exit(1);
-        }
+    for (int i = 0; i < v->size; i++) {
+        printf("%c", v->data[i]);
     }
 }
 
 int main() {
-
     vector v = init();
-    input(&v, 10);
+    input(&v);
 
-    // for (int i = 0; i < v.size; i++) {
-    //     printf("%d ", v.data[i]);
-    // }
-    // printf("\n");
-
-    sort(&v, v.data, v.data + v.size - 1, lt);
-
-    dt *ub = upper_bound(&v, 5);
-    dt *lb = lower_bound(&v, 757);
-
-    printf("upper bound: %d\n", *ub);
-    printf("lower bound: %d\n", *lb);
-
-    for (int i = 0; i < v.size; i++) {
-        printf("%d ", v.data[i]);
-    }
-    printf("\n");
-
+    output(&v);   
 
     return 0;
 }
