@@ -108,7 +108,7 @@ void sort (vector *v, dt *s, dt *e, int (*cmp)(dt, dt)) {
     int i = start, j = m + 1, k = 0;
     
     while (i <= m && j <= end) {
-        if (lt(v->data[i], v->data[j])) { temp[k++] = v->data[i++]; }
+        if (cmp(v->data[i], v->data[j])) { temp[k++] = v->data[i++]; }
         else { temp[k++] = v->data[j++]; }
     }
     while (i <= m) { temp[k++] = v->data[i++]; }
