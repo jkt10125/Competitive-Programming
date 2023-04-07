@@ -1,25 +1,22 @@
 // CLASSICAL DSU
 class DSU {
     public:
-    vector<int> parent;
-    vector<int> size;
-    DSU(int n) {
-        parent.resize(n);
+    std::vector<int> parent, size;
+    DSU (int n) {
+        parent.resize(n); std::iota(parent.begin(), parent.end(), 0);
         size.assign(n, 1);
-        for(int i=0; i<n; i++) parent[i] = i;
     }
-    int Find(int x) {
-        if(x == parent[x]) return x;
-        return parent[x] = Find(parent[x]);
+    int Find (int x) {
+        return (x == parent[x]) ? x : (parent[x] = Find(parent[x]));
     }
     bool Union(int x, int y) {
         int X = Find(x), Y = Find(y);
-        if(X == Y) return false;
-        if(size[X] < size[Y]) swap(X, Y);
-        parent[Y] = X, size[X] += size[Y];
-        return true;
+        if (X == Y) return false;
+        if (size[X] > size[Y]) std::swap(X, Y);
+        parent[X] = Y, size[Y] += size[X];
+        return true; 
     }
-    int Size(int x) { return size[Find(x)]; }
+    int Size (int x) { return size[Find(x)]; }
 };
 
 =>> DSU TO SKIP SOME VALUES IN BETWEEN TWO INDEXES
