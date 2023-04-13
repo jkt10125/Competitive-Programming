@@ -2,19 +2,19 @@
 using namespace std;
 
 const int N = 2e7;
-vector<int> prime; 
-int min_prime_factor[N + 1];
+vector<int> prime, spf;
 // do_once() : sieve()
 
-void sieve () {
+void sieve (int N = N) {
+    spf.resize(N + 1, 0);
 	for (int i = 2; i <= N; i++) {
-		if (!min_prime_factor[i]) { 
-			min_prime_factor[i] = i;
+		if (!spf[i]) { 
+			spf[i] = i;
 			prime.push_back(i); 
 		}
 		for (int p : prime) {
-			if(p > min_prime_factor[i] || i * p > N) break;
-			min_prime_factor[i * p] = p;
+			if(p > spf[i] || i * p > N) break;
+			spf[i * p] = p;
 		}
 	}
 }
@@ -22,7 +22,16 @@ void sieve () {
 
 vector<array<int, 2>> factor (int n) {
     vector<array<int, 2>> p;
-    if (n > N) { // O(sqrt(n / log n))
+    if (n < spf.size()) { // O(log n)
+        while (n > 1) {
+            if (p.empty() || p.back()[0] != spf[n]) {
+                p.push_back({spf[n], 0});
+            }
+            n /= spf[n];
+            p.back()[1]++;
+        }
+    }
+    else { // O(sqrt(n / log n))
         for (int i : prime) {
             if (i * i > n) break;
             if (n % i == 0) {
@@ -35,15 +44,6 @@ vector<array<int, 2>> factor (int n) {
         }
         if (n > 1) {
             p.push_back({n, 1});
-        }
-    }
-    else { // O(log n)
-        while (n > 1) {
-            if (p.empty() || p.back()[0] != min_prime_factor[n]) {
-                p.push_back({min_prime_factor[n], 0});
-            }
-            n /= min_prime_factor[n];
-            p.back()[1]++;
         }
     }
 
