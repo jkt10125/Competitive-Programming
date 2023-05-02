@@ -1,12 +1,13 @@
 #include <bits/stdc++.h>
-using namespace std;
+// using namespace std;
 
 class BigInteger {
-public:
-    string value;
+    std::string value;
     bool sign;
 
-    BigInteger (string Value = "", bool Sign = 0) {
+    public:
+
+    BigInteger (std::string Value = "", bool Sign = 0) {
         value = Value;
         sign = Sign;
         clean();
@@ -15,10 +16,10 @@ public:
     BigInteger (long long a) {
         sign = (a < 0);
         a = abs (a);
-        value = to_string(a);  
+        value = std::to_string(a);  
     }
     
-    BigInteger &operator = (const string &rhs) {
+    BigInteger &operator = (const std::string &rhs) {
         return *this = BigInteger (rhs);
     }
 
@@ -27,7 +28,7 @@ public:
     }
 
     void allignRight (const long long a) {
-        string zeroes;
+        std::string zeroes;
         for (int i = 0; i < a; i++) {
             zeroes.push_back('0');
         }
@@ -198,7 +199,7 @@ public:
         }
         ans = BigInteger ();
         BigInteger tmp = 0ll;
-        long unsigned int idx = 0;
+        size_t idx = 0;
         while (tmp < rhs) {
             tmp = tmp * 10ll + (value[idx++] - 48);
         }
@@ -309,7 +310,7 @@ public:
         if (*this < B) {
             return B.operator & (*this); 
         }
-        string s = toBinary ();
+        std::string s = toBinary ();
         B.value = B.toBinary ();
         int k = s.size() - B.value.size();
         for (int i = B.value.size() - 1; i >= 0; i--) {
@@ -336,7 +337,7 @@ public:
         if (*this > B) {
             return B.operator | (*this);
         } 
-        string s = toBinary ();
+        std::string s = toBinary ();
         B.value = B.toBinary ();
         int k = B.value.size() - s.size();
         for (int i = s.size() - 1; i >= 0; i--) {
@@ -361,7 +362,7 @@ public:
     BigInteger operator ^ (const BigInteger &rhs) {
         BigInteger B = rhs;
         if (*this > B) return B.operator ^ (*this); 
-        string s = toBinary ();
+        std::string s = toBinary ();
         B.value = B.toBinary ();
         int k = B.value.size() - s.size();
         for (int i = s.size() - 1; i >= 0; i--) {
@@ -391,7 +392,7 @@ public:
             return (*this * 2ll);
         }
         BigInteger ans = *this;
-        string s = toBinary ();
+        std::string s = toBinary ();
         for (BigInteger i=0; i<rhs; i++) {
             s.push_back('0');
         }
@@ -419,7 +420,7 @@ public:
             return (*this / 2ll);
         }
         BigInteger ans = *this;
-        string s = toBinary ();
+        std::string s = toBinary ();
         for (BigInteger i = 0; i < rhs && s.size() > 0; i++) {
             s.pop_back();
         }
@@ -450,13 +451,13 @@ public:
         return B;
     }
 
-    friend ostream &operator << (ostream &os, const BigInteger &A) {
+    friend std::ostream &operator << (std::ostream &os, const BigInteger &A) {
         if (A.sign) os << "-";
         os << A.value;
         return os;
     }
 
-    friend istream &operator >> (istream &is, BigInteger &A) {
+    friend std::istream &operator >> (std::istream &is, BigInteger &A) {
         is >> A.value;
         A.sign = (A.value[0] == '-'); 
         A.clean ();
@@ -464,7 +465,7 @@ public:
     }
 
     void clean () {
-        long unsigned int ctr = 0;
+        size_t ctr = 0;
         ctr = (value[0] == '-');
         while (value[ctr] == '0' && ctr < value.size()) {
             ctr++;
@@ -480,15 +481,15 @@ public:
     }
 
     bool isOdd() {
-        return (value.back()-48) % 2;
+        return (value.back() - 48) % 2;
     }
     
     bool isEven() {
         return !isOdd();
     }
 
-    string toBinary() {
-        string s;
+    std::string toBinary() {
+        std::string s;
         BigInteger A = absolute();
 
         while(A > BigInteger()) {
@@ -500,10 +501,10 @@ public:
         return s;
     }
 
-    void toNumber(string s) {
+    void toNumber(std::string s) {
         value = "0";
         const bool SIGN = sign;
-        long unsigned int n = 0;
+        size_t n = 0;
         while(n < s.size()) {
             *this <<= 1;
             if(s[n++] == '1') *this += 1;
