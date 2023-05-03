@@ -23,5 +23,7 @@ vector<int> f(int n) {
 int main() {
     int n;
     cin >> n;
-
+    for (int i : f(n)) {
+        std::cout << i << ' ';
+    }
 }

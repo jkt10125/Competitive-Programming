@@ -78,6 +78,32 @@ class matrix {
         return c;
     }
 
+    matrix operator % (const int &mod) {
+        matrix c(row, col);
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                c[{i, j}] = data[i][j] % mod;
+            }
+        }
+        return c;
+    }
+
+    matrix operator | (const matrix &rhs) {
+        if (col != rhs.row) {
+            std::cerr << "Dimensions mismatch(/)\n";
+            exit(0);
+        }
+        matrix c(row, rhs.col, INT_MAX);
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < rhs.col; j++) {
+                for (int k = 0; k < col; k++) {
+                    c[{i, j}] = std::min(c[{i, j}], data[i][k] + rhs[{k, j}]);
+                }
+            }
+        }
+        return c;
+    }
+
     matrix operator ! () {
         matrix res(col, row);
         for (int i = 0; i < row; i++) {
@@ -88,10 +114,18 @@ class matrix {
         return res;
     }
 
-    matrix identity(int n) {
+    matrix identity(int n, int multiplier = 1) {
         matrix I(n, n, 0);
         for (int i = 0; i < n; i++) {
-            I[{i, i}] = 1;
+            I[{i, i}] = multiplier;
+        }
+        return I;
+    }
+
+    matrix dot_identity(int n) {
+        matrix I(n, n, 1000000000);
+        for (int i = 0; i < n; i++) {
+            I[{i, i}] = 0;
         }
         return I;
     }
@@ -104,6 +138,19 @@ class matrix {
                 res = res * A;
             }
             A = A * A;
+            exp >>= 1;
+        }
+        return res;
+    }
+
+    matrix dot_power(int exp) {
+        matrix res = dot_identity(row);
+        matrix A = *this;
+        while (exp) {
+            if (exp & 1) {
+                res = res | A;
+            }
+            A = A | A;
             exp >>= 1;
         }
         return res;
