@@ -14,8 +14,6 @@ class matrix {
             }
         }
     }
-
-    
     
     matrix (const matrix &M) {
         *this = matrix(M.row, M.col);
