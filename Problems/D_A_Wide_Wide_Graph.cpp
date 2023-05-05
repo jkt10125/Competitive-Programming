@@ -1,58 +1,61 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-vector<int> lvl;
+vector<vector<int>> A;
 
-void dfs(int u, int p, vector<vector<int>> &adj) {
-    for (int v : adj[u]) {
-        if (v != p) {
-            lvl[v] = lvl[u] + 1;
-            dfs(v, u, adj);
+vector<int> d;
+
+void dfs(int x, int par) {
+    for (int it : A[x]) {
+        if(it != par) {
+            d[it] = d[x] + 1;
+            dfs(it, x);
         }
     }
-}
+} 
 
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
     int n;
     cin >> n;
-    vector<vector<int>> adj(n + 1);
-
-    for (int i = 0; i < n - 1; i++) {
-        int a, b;
-        cin >> a >> b;
-        adj[a].push_back(b);
-        adj[b].push_back(a);
+    A.resize(n);
+    d.resize(n);
+    for (int i = 1; i < n; i++) {
+        int u, v;
+        cin >> u >> v;
+        u--; v--;
+        A[u].push_back(v);
+        A[v].push_back(u);
     }
 
-    lvl.resize(n + 1);
+    d[0] = 0;
+    dfs(0, -1);
 
-    int root = 1;
-    for (int i = 1; i <= n; i++) {
-        if (adj[i].size() == 1) {
-            root = i;
-            break;
-        }
-    }
-    lvl[root] = 0;
+    int a = max_element(d.begin(), d.end()) - d.begin();
+    d[a] = 0;
+    dfs(a, -1);
+    vector<int> dist_a = d;
 
-    dfs(root, -1, adj);
+    int b = max_element(d.begin(), d.end()) - d.begin();
+    d[b] = 0;
+    dfs(b, -1);
+    vector<int> dist_b = d;
 
-    vector<int> A(n + 1);
-    for (int i = 1; i <= n; i++) {
-        A[lvl[i]]++;
-    }
-    A[0] = 0;
-
-    for (int i = 1; i <= n; i++) {
-        A[i] = i;
+    for (int i = 0; i < n; ++i) {
+        d[i] = max(dist_a[i], dist_b[i]);
     }
 
-    int mx = *max_element(lvl.begin(), lvl.end());
+    sort(d.begin(), d.end());
+    vector<int> ans(n, 1);
+    int ctr = 0;
 
-    for (int i = 1; i <= n; i++) {
-        int ans = max(1, 2 * i - mx);
-        ans = min(ans, n);
-        std::cout << ans << ' ';
+    for (int i = 0; i < n; i++) {
+        while (d[ctr] < i + 1 && ctr < n - 1) ctr++;
+        ans[i] = ctr + 1; 
     }
 
+    for (int i : ans) cout << i << ' ';
+    cout << endl; 
 }

@@ -1,21 +1,33 @@
 #include <bits/stdc++.h>
-using namespace std;
 
 int main() {
-    int n, m;
-    cin >> n >> m;
-    int par[n], vis[n] = {0};
-
-    int ans = 0;
-    for (int i = 0; i < m; i++) {
-        int x;
-        cin >> x;
-        while (!vis[x] && x) {
-            vis[x] = 1;
-            x = par[x];
-            ans++;
+    int t;
+    std::cin >> t;
+    while (t--) {
+        int n, k;
+        std::cin >> n >> k;
+        std::map<int, int> A;
+        for (int i = 0; i < n; i++) {
+            int x;
+            std::cin >> x;
+            A[x]++;
         }
-    }
 
-    cout << ans;
+        for (auto &it : A) {
+            if (!it.second) continue;
+            if (A.find(it.first * k) != A.end()) {
+                if (A[it.first * k]) {
+                    it.second--;
+                    A[it.first * k]--;
+                }
+            }
+        }
+
+        int ans = 0;
+        for (auto it : A) {
+            ans += it.second;
+        }
+
+        std::cout << ans << std::endl;
+    }
 }
